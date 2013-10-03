@@ -34,53 +34,28 @@ class Graphic extends AppModel {
 	public $validate = array(
 		'release_id' => array(
 			'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => true,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'rule' => array('numeric')
 			)
 		),
 		'url' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
 				'message' => 'A URL for this linked graphic is required',
-				//'allowEmpty' => false,
-				'required' => true,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'required' => true
 			)
 		),
 		'title' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
 				'message' => 'Required',
-				//'allowEmpty' => false,
-				'required' => true,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'required' => true
 			)
 		),
-		/*
-		'filename' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
-				'message' => 'Image required',
-				//'allowEmpty' => false,
-				'required' => true,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			)
-		),
-		*/
 		'image' => array(
 			'notempty' => array(
 				'rule' => array('uploadedImage'),
 				'message' => 'Image required',
-				//'allowEmpty' => false,
 				'required' => true,
-				//'last' => false, // Stop validation after this rule
 				'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 			'valid_extension' => array(
@@ -97,8 +72,6 @@ class Graphic extends AppModel {
 	}
 	
 	public function beforeDelete($cascade = true) {
-		// Imports a re-definition of the deprecated mime_content_type() function
-		// needed by UploadBehavior
 		$this->__folderToDelete = $this->field('dir');
 	}
 	
@@ -111,19 +84,6 @@ class Graphic extends AppModel {
 		if (empty($contents)) {
 			$folder->delete();	
 		}
-		
-		/* Seems unnecessary if just deleting the folder works
-		App::uses('File', 'Utility');
-		$filename = $this->field('filename');
-		$file = new File(WWW_ROOT."img/releases/$dir/$filename", false, 0777);
-		$file->delete();
-		
-		Oh, UploadBehavior seems to do this for us.
-		App::uses('Folder', 'Utility');
-		$dir = $this->field('dir');
-		$folder = new Folder(WWW_ROOT."img/releases/$dir");
-		return $folder->delete();
-		*/
 	}
 	
 	public function getThumbnailFilename($full_filename) {
