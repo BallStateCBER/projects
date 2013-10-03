@@ -96,11 +96,9 @@ class Graphic extends AppModel {
 		return ! empty($check['image']['name']);
 	}
 	
-	public function beforeDelete() {
+	public function beforeDelete($cascade = true) {
 		// Imports a re-definition of the deprecated mime_content_type() function
 		// needed by UploadBehavior
-		
-		
 		$this->__folderToDelete = $this->field('dir');
 	}
 	
@@ -136,7 +134,7 @@ class Graphic extends AppModel {
 		return implode('.', $thumbnail_filename);
 	}
 	
-	public function afterFind($results) {
+	public function afterFind($results, $primary = false) {
 		foreach ($results as &$result) {
 			if (isset($result['Graphic']['image'])) {
 				// Construct the thumbnail filename by inserting '.thumb' before the extension
