@@ -149,6 +149,10 @@ class ReleasesController extends AppController {
 		// Sends $available_tags and $unlisted_tags to the view
 		$this->TagManager->prepareEditor($this);
 		
+		// Removes the 'required' attribute for the #ReleasePartnerId field in the view,
+		// which breaks the form if a new partner is entered
+		unset($this->Release->validate['partner_id']);
+		
 		$this->set(array(
 			'mode' => 'add',
 			'title_for_layout' => 'Add a New Release',
