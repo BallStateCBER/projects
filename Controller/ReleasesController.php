@@ -220,22 +220,29 @@ class ReleasesController extends AppController {
 				}
 			}
 			
+			// Process graphic removal
+			App::Uses('Graphic', 'Model');
+			$Graphic = new Graphic();
+			foreach ($this->request->data['Graphic'] as $k => $g) {
+				if (isset($g['remove']) && $g['remove']) {
+					$Graphic->delete($g['id']);
+					unset($this->request->data['Graphic'][$k]);
+				}
+			}
+			
 			$this->Release->set($this->request->data);
 			if ($this->Release->validateAssociated($this->request->data)) {
 				if ($this->Release->save($this->request->data)) {
-					App::Uses('Graphic', 'Model');
-					$Graphic = new Graphic();
+					
+					// Save graphics
 					foreach ($this->request->data['Graphic'] as $g) {
-						if (isset($g['remove']) && $g['remove']) {
-							$Graphic->delete($g['id']);
-						} else {
-							$Graphic->create($g);
-							$Graphic->set('release_id', $this->Release->id);
-							if (! $Graphic->save()) {
-								$this->Flash->error('There was an error saving a release graphic ('.$g['image']['name'].'). Please try again.');
-							}
+						$Graphic->create($g);
+						$Graphic->set('release_id', $this->Release->id);
+						if (! $Graphic->save()) {
+							$this->Flash->error('There was an error saving a release graphic ('.$g['image']['name'].'). Please try again.');
 						}
 					}
+
 					$this->Flash->success('Release updated.');
 					$this->redirect(array(
 						'controller' => 'releases', 
