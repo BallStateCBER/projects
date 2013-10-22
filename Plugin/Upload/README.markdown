@@ -1,6 +1,8 @@
+[![Build Status](https://travis-ci.org/josegonzalez/cakephp-upload.png?branch=master)](https://travis-ci.org/josegonzalez/cakephp-upload) [![Coverage Status](https://coveralls.io/repos/josegonzalez/cakephp-upload/badge.png?branch=master)](https://coveralls.io/r/josegonzalez/cakephp-upload?branch=master) [![Total Downloads](https://poser.pugx.org/josegonzalez/cakephp-upload/d/total.png)](https://packagist.org/packages/josegonzalez/cakephp-upload) [![Latest Stable Version](https://poser.pugx.org/josegonzalez/cakephp-upload/v/stable.png)](https://packagist.org/packages/josegonzalez/cakephp-upload)
+
 # Upload Plugin 2.0
 
-The Upload Plugin is an attempt to sanely upload files using techniques garnered packages such as [MeioUpload](http://github.com/jrbasso/MeioUpload) , [UploadPack](http://github.com/szajbus/uploadpack) and [PHP documentation](http://php.net/manual/en/features.file-upload.php).
+The Upload Plugin is an attempt to sanely upload files using techniques garnered packages such as [MeioUpload](http://github.com/jrbasso/MeioUpload) , [UploadPack](http://github.com/szajbus/cakephp-uploadpack) and [PHP documentation](http://php.net/manual/en/features.file-upload.php).
 
 ## Background
 
@@ -10,16 +12,26 @@ Media Plugin is too complicated, and it was a PITA to merge the latest updates i
 
 * CakePHP 2.x
 * Imagick/GD PHP Extension (for Thumbnail Creation)
-* PHP5 (Not really, but I'm more likely to be able to fix a PHP5 issue than a PHP4 issue)
+* PHP5
 * Patience
 
 ## Installation
 
-For 1.3 support, please see the [1.3 branch](https://github.com/josegonzalez/upload/tree/1.3).
+_[Using [Composer](http://getcomposer.org/)]_
+
+[View on Packagist](https://packagist.org/packages/josegonzalez/cakephp-upload), and copy the json snippet for the latest version into your project's `composer.json`. Eg, v. 1.0.0 would look like this:
+
+	{
+		"require": {
+			"josegonzalez/cakephp-upload": "1.0.0"
+		}
+	}
+
+Because this plugin has the type `cakephp-plugin` set in it's own `composer.json`, composer knows to install it inside your `/Plugins` directory, rather than in the usual vendors file. It is recommended that you add `/Plugins/Upload` to your .gitignore file. (Why? [read this](http://getcomposer.org/doc/faqs/should-i-commit-the-dependencies-in-my-vendor-directory.md).)
 
 _[Manual]_
 
-* Download this: [http://github.com/josegonzalez/upload/zipball/2.0](http://github.com/josegonzalez/upload/zipball/2.0)
+* Download this: [http://github.com/josegonzalez/cakephp-upload/zipball/master](http://github.com/josegonzalez/cakephp-upload/zipball/master)
 * Unzip that download.
 * Copy the resulting folder to `app/Plugin`
 * Rename the folder you just copied to `Upload`
@@ -28,7 +40,7 @@ _[GIT Submodule]_
 
 In your app directory type:
 
-	git submodule add -b 2.0 git://github.com/josegonzalez/upload.git Plugin/Upload
+	git submodule add -b master git://github.com/josegonzalez/cakephp-upload.git Plugin/Upload
 	git submodule init
 	git submodule update
 
@@ -36,7 +48,24 @@ _[GIT Clone]_
 
 In your `Plugin` directory type:
 
-	git clone -b 2.0 git://github.com/josegonzalez/upload.git Upload
+	git clone -b master git://github.com/josegonzalez/cakephp-upload.git Upload
+
+### Imagick Support
+
+To enable Imagick support, you need to have imagick installed:
+
+    # Debian systems
+    sudo apt-get install php-imagick
+
+    # OS X Homebrew
+    brew tap homebrew/dupes
+    brew tap josegonzalez/homebrew-php
+    brew install php54-imagick
+
+    # From pecl
+    pecl install imagick
+
+If you cannot install imagick, please do not use imagick, and instead configure the plugin with `'thumbnailMethod'	=> 'php'` in your setup options.
 
 ### Enable plugin
 
@@ -91,11 +120,30 @@ Using the above setup, uploaded files cannot be deleted. To do so, a field must 
 		);
 	}
 
-	<?php echo $this->Form->create('User', array('type' => 'file')); ?>
-		<?php echo $this->Form->input('User.username'); ?>
-		<?php echo $this->Form->input('User.photo', array('type' => 'file')); ?>
-		<?php echo $this->Form->input('User.photo_dir', array('type' => 'hidden')); ?>
-	<?php echo $this->Form->end(); ?>
+In the above example, photo can be a file upload via a file input within a form, a file grabber (from a url) via a text input, OR programatically used on the controller to file grab via a url.
+
+### File Upload Example
+
+    <?php echo $this->Form->create('User', array('type' => 'file')); ?>
+    	<?php echo $this->Form->input('User.username'); ?>
+    	<?php echo $this->Form->input('User.photo', array('type' => 'file')); ?>
+    	<?php echo $this->Form->input('User.photo_dir', array('type' => 'hidden')); ?>
+    <?php echo $this->Form->end(); ?>
+
+
+### File Grabbing via Form Example
+
+    <?php echo $this->Form->create('User', array('type' => 'file')); ?>
+        <?php echo $this->Form->input('User.username'); ?>
+        <?php echo $this->Form->input('User.photo', array('type' => 'file')); ?>
+        <?php echo $this->Form->input('User.photo_dir', array('type' => 'hidden')); ?>
+    <?php echo $this->Form->end(); ?>
+
+### Programmatic File Grab via Controller
+
+    $data['photo'] = $image_url;
+    $this->User->set($data);
+    $this->User->save();
 
 Thumbnails are not automatically created. To do so, thumbnail sizes must be defined:
 Note: by default thumbnails will be generated by imagick, if you want to use GD you need to set the thumbnailMethod attribute. Example: `'thumbnailMethod'	=> 'php'`.
@@ -190,7 +238,7 @@ Once the `attachments` table has been created, we would create the following mod
 				'foreignKey' => 'foreign_key',
 			),
 			'Message' => array(
-				'className' => 'Post',
+				'className' => 'Message',
 				'foreignKey' => 'foreign_key',
 			),
 		);
@@ -205,13 +253,13 @@ We would also need to present a valid counter-relationship in the `Post` model:
 				'className' => 'Attachment',
 				'foreignKey' => 'foreign_key',
 				'conditions' => array(
-					'Attachment.model' => 'Post',
+					'Image.model' => 'Post',
 				),
 			),
 		);
 	}
 
-The key thing to note here is the `Post` model has some conditions on the relationship to the `Attachment` model, where the `Attachment.model` has to be `Post`. Remember to set the `model` field to `Post`, or whatever model it is you'd like to attach it to, otherwise you may get incorrect relationship results when performing find queries.
+The key thing to note here is the `Post` model has some conditions on the relationship to the `Attachment` model, where the `Image.model` has to be `Post`. Remember to set the `model` field to `Post`, or whatever model it is you'd like to attach it to, otherwise you may get incorrect relationship results when performing find queries.
 
 We would also need a similar relationship in our `Message` model:
 
@@ -222,31 +270,116 @@ We would also need a similar relationship in our `Message` model:
 				'className' => 'Attachment',
 				'foreignKey' => 'foreign_key',
 				'conditions' => array(
-					'Attachment.model' => 'Message',
+					'Video.model' => 'Message',
 				),
 			),
 		);
 	}
 
+Now that we have our models setup, we should create the proper actions in our controllers. To keep this short, we shall only document the Post model:
+
+    <?php
+    class PostsController extends AppController {
+      /* the rest of your controller here */
+      public function add() {
+        if ($this->request->is('post')) {
+          try {
+            $this->Post->createWithAttachments($this->request->data);
+            $this->Session->setFlash(__('The message has been saved'));
+          } catch (Exception $e) {
+            $this->Session->setFlash($e->getMessage());
+          }
+        }
+      }
+    }
+
+In the above example, we are calling our custom `createWithAttachments` method on the `Post` model. This will allow us to unify the Post creation logic together in one place. That method is outlined below:
+
+    <?php
+    class Post extends AppModel {
+      /* the rest of your model here */
+
+      public function createWithAttachments($data) {
+        // Sanitize your images before adding them
+        $images = array();
+        if (!empty($data['Image'][0])) {
+          foreach ($data['Image'] as $i => $image) {
+            if (is_array($data['Image'][$i])) {
+              // Force setting the `model` field to this model
+              $image['model'] = 'Post';
+
+              // Unset the foreign_key if the user tries to specify it
+              if (isset($image['foreign_key'])) {
+                unset($image['foreign_key']);
+              }
+
+              $images[] = $image;
+            }
+          }
+        }
+        $data['Image'] = $images;
+
+        // Try to save the data using Model::saveAll()
+        $this->create();
+        if ($this->saveAll($data)) {
+          return true;
+        }
+
+        // Throw an exception for the controller
+        throw new Exception(__("This post could not be saved. Please try again"));
+      }
+    }
+
+The above model method will:
+
+- Ensure we only try to save valid images
+- Force the foreign_key to be unspecified. This will allow saveAll to properly associate it
+- Force the model field to `Post`
+
+Now that this is set, we just need a view for our controller. A sample view for `View/Posts/add.ctp` is as follows (fields not necessary for the example are omitted):
+
+    <?php
+      echo $this->Form->create('Post', array('type' => 'file'));
+        echo $this->Form->input('Image.0.attachment', array('type' => 'file', 'label' => 'Image'));
+        echo $this->Form->input('Image.0.model', array('type' => 'hidden', 'value' => 'Post'));
+      echo $this->Form->end(__('Add'));
+    ?>
+
+The one important thing you'll notice is that I am not referring to the `Attachment` model as `Attachment`, but rather as `Image`; when I initially specified the `$hasMany` relationship between an `Attachment` and a `Post`, I aliased `Attachment` to `Image`. This is necessary for cases where many of your Polymorphic models may be related to each other, as a type of *hint* to the CakePHP ORM to properly reference model data.
+
+I'm also using `Model.{n}.field` notation, which would allow you to add multiple attachment records to the Post. This is necessary for `$hasMany` relationships, which we are using for this example.
+
+Once you have all the above in place, you'll have a working Polymorphic upload!
+
 Please note that this is not the only way to represent file uploads, but it is documented here for reference.
+
+### Alternative Behaviors
+
+The Upload plugin also comes with a `FileImport` behavior and a `FileGrabber` behavior.
+
+#### FileImportBehavior
+
+`FileImportBehavior` may be used to import files directly from the disk. This is useful in importing from a directory already on the filesystem.
 
 ## Behavior options:
 
 * `pathMethod`: The method to use for file paths. This is appended to the `path` option below
   * Default: (string) `primaryKey`
   * Options:
-    * flat: Does not create a path for each record. Files are moved to the value of the 'path' option
-    * primaryKey: Path based upon the record's primaryKey is generated. Persists across a record
-    * random: Random path is generated for each file upload. Does not persist across a record.
+    * flat: Does not create a path for each record. Files are moved to the value of the 'path' option.
+    * primaryKey: Path based upon the record's primaryKey is generated. Persists across a record update.
+    * random: Random path is generated for each file upload. Does not persist across a record update.
+    * randomCombined: Random path - with model id - is generated for each file upload. Does not persist across a record update.
 * `path`: A path relative to the `APP_PATH`. Should end in `{DS}`
   * Default: (string) `'{ROOT}webroot{DS}files{DS}{model}{DS}{field}{DS}'`
   * Tokens:
     * {ROOT}: Replaced by a `rootDir` option
     * {DS}: Replaced by a `DIRECTORY_SEPARATOR`
-    * {model}: Replaced by the Model Alias
-    * {field}: Replaced by the field name
-    * {size}: Replaced by a zero-length string (the empty string) when used for the regular file upload path
-    * {geometry}: Replaced by a zero-length string (the empty string) when used for the regular file upload path
+    * {model}: Replaced by the Model Alias.
+    * {field}: Replaced by the field name.
+    * {primaryKey}: Replaced by the record primary key, when available. If used on a new record being created, will have undefined behavior.
+    * {size}: Replaced by a zero-length string (the empty string) when used for the regular file upload path. Only available for resized thumbnails.
+    * {geometry}: Replaced by a zero-length string (the empty string) when used for the regular file upload path. Only available for resized thumbnails.
 * `fields`: An array of fields to use when uploading files
   * Default: (array) `array('dir' => 'dir', 'type' => 'type', 'size' => 'size')`
   * Options:
@@ -279,7 +412,7 @@ Please note that this is not the only way to represent file uploads, but it is d
   * Default: (string) `imagick`
   * Options:
     * imagick: Uses the PHP `imagick` extension to generate thumbnails
-    * php: Uses the built-in PHP methods (`GD` extension) to generate thumbnails
+    * php: Uses the built-in PHP methods (`GD` extension) to generate thumbnails. Does not support BMP images.
 * `thumbnailName`: Naming style for a thumbnail
   * Default: `NULL`
   * Note: The tokens `{size}` and `{filename}` are both valid for naming and will be auto-replaced with the actual terms.
@@ -297,7 +430,7 @@ Please note that this is not the only way to represent file uploads, but it is d
 * `thumbnailPrefixStyle`: Whether to prefix or suffix the style onto thumbnails
   * Default: (boolean) `true` prefix the thumbnail
   * Note that this overrides `thumbnailName` when `thumbnailName` is not specified in your config
-* `thumbnailQuality`: Quality of thumbnails that will be generated, on a scale of 0-100
+* `thumbnailQuality`: Quality of thumbnails that will be generated, on a scale of 0-100. Not supported gif images when using GD for image manipulation.
   * Default: (int) `75`
 * `thumbnailSizes`: Array of thumbnail sizes, with the size-name mapping to a geometry
   * Default: (array) empty
@@ -311,7 +444,9 @@ Please note that this is not the only way to represent file uploads, but it is d
     * Any valid image type
 * `saveDir`: Can be used to turn off saving the directory
   * Default: (boolean) `true`
-  * Note: Because of the way in which the directory is saved, if you are using a `pathMethod` other than flat and you set `saveDir` to false, you may end up in situations where the file is in a location that you cannot predict. This is more of an issue for a `pathMethod` of `random` than `primaryKey`, but keep this in mind when fiddling with this option
+  * Note: Because of the way in which the directory is saved, if you are using a `pathMethod` other than flat and you set `saveDir` to false, you may end up in situations where the file is in a location that you cannot predict. This is more of an issue for a `pathMethod` of `random` and `randomCombined` than `primaryKey`, but keep this in mind when fiddling with this option
+* `mode`: The UNIX permissions to set on the created upload directories.
+  * Default: (integer) `0777`
 
 ## Thumbnail Sizes and Styles
 
@@ -400,6 +535,17 @@ Check that a file was uploaded
 		)
 	);
 
+#### isFileUploadOrHasExistingValue
+
+Check that either a file was uploaded, or the existing value in the database is not blank
+
+	public $validate = array(
+		'photo' => array(
+			'rule' => 'isFileUploadOrHasExistingValue',
+			'message' => 'File was missing from submission'
+		)
+	);
+
 #### tempDirExists
 
 Check that the PHP temporary directory is missing
@@ -419,6 +565,8 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 			'message' => 'The system temporary directory is missing'
 		)
 	);
+
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
 
 #### isSuccessfulWrite
 
@@ -440,6 +588,8 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 		)
 	);
 
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
+
 #### noPhpExtensionErrors
 
 Check that a PHP extension did not cause an error
@@ -460,14 +610,16 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 		)
 	);
 
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
+
 #### isValidMimeType
 
 Check that the file is of a valid mimetype
 
 	public $validate = array(
 		'photo' => array(
-			'rule' => array('isValidMimeType', array('valid/mimetypes', 'array/here')),
-			'message' => 'File is of an invalid mimetype'
+			'rule' => array('isValidMimeType', array('application/pdf', 'image/png')),
+			'message' => 'File is not a pdf or png'
 		)
 	);
 
@@ -475,10 +627,12 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 
 	public $validate = array(
 		'photo' => array(
-			'rule' => array('isValidMimeType', array('valid/mimetypes', 'array/here'), false),
-			'message' => 'File is of an invalid mimetype'
+			'rule' => array('isValidMimeType', array('application/pdf', 'image/png'), false),
+			'message' => 'File is not a pdf or png'
 		)
 	);
+
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
 
 #### isWritable
 
@@ -500,6 +654,8 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 		)
 	);
 
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
+
 #### isValidDir
 
 Check that the upload directory exists
@@ -519,6 +675,8 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 			'message' => 'File upload directory does not exist'
 		)
 	);
+
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
 
 #### isBelowMaxSize
 
@@ -540,6 +698,8 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 		)
 	);
 
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
+
 #### isAboveMinSize
 
 Check that the file is above the minimum file upload size (checked in bytes)
@@ -560,14 +720,16 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 		)
 	);
 
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
+
 #### isValidExtension
 
 Check that the file has a valid extension
 
 	public $validate = array(
 		'photo' => array(
-			'rule' => array('isValidExtension', array('ext', 'array', 'here')),
-			'message' => 'File has an invalid extension'
+			'rule' => array('isValidExtension', array('pdf', 'png', 'txt')),
+			'message' => 'File does not have a pdf, png, or txt extension'
 		)
 	);
 
@@ -575,10 +737,12 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 
 	public $validate = array(
 		'photo' => array(
-			'rule' => array('isValidExtension', array('ext', 'array', 'here'), false),
-			'message' => 'File has an invalid extension'
+			'rule' => array('isValidExtension', array('pdf', 'png', 'txt'), false),
+			'message' => 'File does not have a pdf, png, or txt extension'
 		)
 	);
+
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
 
 #### isAboveMinHeight
 
@@ -600,6 +764,8 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 		)
 	);
 
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
+
 #### isBelowMaxHeight
 
 Check that the file is below the maximum height requirement (checked in pixels)
@@ -619,6 +785,8 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 			'message' => 'File is above the maximum height'
 		)
 	);
+
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
 
 #### isAboveMinWidth
 
@@ -640,6 +808,8 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 		)
 	);
 
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
+
 #### isBelowMaxWidth
 
 Check that the file is below the maximum width requirement (checked in pixels)
@@ -659,9 +829,22 @@ If the argument `$requireUpload` is passed, we can skip this check when a file i
 		)
 	);
 
+In the above, the variable `$requireUpload` has a value of false. By default, `requireUpload` is set to true.
+
+## Remove a current file without deleting the entire record
+
+In some cases you might want to remove a photo or uploaded file without having to
+remove the entire record from the Model.  In this case you would use the following code:
+
+    <?php
+    echo $this->Form->create('Model', array('type' => 'file'));
+    echo $this->Form->input('Model.file.remove', array('type' => 'checkbox', 'label' => 'Remove existing file'));
+
 ## License
 
-Copyright (c) 2010-2012 Jose Diaz-Gonzalez
+The MIT License (MIT)
+
+Copyright (c) 2010 Jose Diaz-Gonzalez
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
