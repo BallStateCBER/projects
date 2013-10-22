@@ -115,13 +115,12 @@ class ReleasesController extends AppController {
 			$this->Release->create($this->request->data);
 			if ($this->Release->validateAssociated($this->request->data)) {
 				if ($this->Release->save($this->request->data)) {
-					App::Uses('Graphic', 'Model');
-					$Graphic = new Graphic();
+					$this->loadModel('Graphic');
 					if (isset($this->request->data['Graphic'])) {
 						foreach ($this->request->data['Graphic'] as $g) {
-							$Graphic->create($g);
-							$Graphic->set('release_id', $this->Release->id);
-							if (! $Graphic->save()) {
+							$this->Graphic->create($g);
+							$this->Graphic->set('release_id', $this->Release->id);
+							if (! $this->Graphic->save()) {
 								$this->Flash->error('There was an error saving a release graphic ('.$g['image']['name'].'). Please try again.');
 							}
 						}
@@ -221,11 +220,10 @@ class ReleasesController extends AppController {
 			}
 			
 			// Process graphic removal
-			App::Uses('Graphic', 'Model');
-			$Graphic = new Graphic();
+			$this->loadModel('Graphic');
 			foreach ($this->request->data['Graphic'] as $k => $g) {
 				if (isset($g['remove']) && $g['remove']) {
-					$Graphic->delete($g['id']);
+					$this->Graphic->delete($g['id']);
 					unset($this->request->data['Graphic'][$k]);
 				}
 			}
@@ -236,9 +234,9 @@ class ReleasesController extends AppController {
 					
 					// Save graphics
 					foreach ($this->request->data['Graphic'] as $g) {
-						$Graphic->create($g);
-						$Graphic->set('release_id', $this->Release->id);
-						if (! $Graphic->save()) {
+						$this->Graphic->create($g);
+						$this->Graphic->set('release_id', $this->Release->id);
+						if (! $this->Graphic->save()) {
 							$this->Flash->error('There was an error saving a release graphic ('.$g['image']['name'].'). Please try again.');
 						}
 					}
@@ -395,12 +393,11 @@ class ReleasesController extends AppController {
 				'slug' => $release['Release']['slug']
 			), true);
 			if (! empty($release['Graphic'])) {
-				App::Uses('Graphic', 'Model');
-				$Graphic = new Graphic();
+				$this->loadModel('Graphic');
 				$release['Graphic'][0]['thumbnail'] = 
 					Router::url('/', true).
 					'img/releases/'.$release['Graphic'][0]['dir'].'/'.
-					$Graphic->getThumbnailFilename($release['Graphic'][0]['image']);
+					$this->Graphic->getThumbnailFilename($release['Graphic'][0]['image']);
 			} 
 		}
 		$this->set('release', $release);
