@@ -135,6 +135,8 @@ CakePlugin::load('Sluggable');
 CakePlugin::load('Upload');		// Used for Graphics
 CakePlugin::load('Cuploadify');	// Used for Reports
 CakePlugin::load('Search');
+CakePlugin::load('DebugKit');
+App::uses('FireCake','DebugKit.Lib');
 
 // Migration from 2.1 to 2.2
 // Enable the Dispatcher filters for plugin assets, and
