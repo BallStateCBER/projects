@@ -104,4 +104,14 @@ class Graphic extends AppModel {
 		}
 		return $results;
 	}
+	
+	public function sanitizeFileName($file_name){
+		$file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
+		$slug_file_name = Inflector::slug(pathinfo($file_name, PATHINFO_FILENAME));
+		$file_name = $slug_file_name;
+		if (! empty($file_ext)) {
+			$file_name .= ".$fileExt";
+		}
+		return $file_name;
+    }
 }
