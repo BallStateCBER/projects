@@ -18,7 +18,8 @@ class Graphic extends AppModel {
 				'thumbnailQuality' => 90,
 				'thumbnailSizes' => array('thumb' => '195l'), // longest side will be 195px
 				'thumbnailMethod' => 'php',
-				'thumbnailName' => '{filename}.{size}' // e.g. origfilename.thumb.extension
+				'thumbnailName' => '{filename}.{size}', // e.g. origfilename.thumb.extension
+				'fileNameFunction' => 'sanitizeFileName'
 			)
 		)
 	);
@@ -107,10 +108,9 @@ class Graphic extends AppModel {
 	
 	public function sanitizeFileName($file_name){
 		$file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
-		$slug_file_name = Inflector::slug(pathinfo($file_name, PATHINFO_FILENAME));
-		$file_name = $slug_file_name;
+		$file_name = Inflector::slug(pathinfo($file_name, PATHINFO_FILENAME));
 		if (! empty($file_ext)) {
-			$file_name .= ".$fileExt";
+			$file_name .= '.'.$file_ext;
 		}
 		return $file_name;
     }
