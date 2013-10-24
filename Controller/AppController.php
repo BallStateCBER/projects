@@ -43,6 +43,7 @@ class AppController extends Controller {
 		'Form'
 	);
 	public $components = array(
+		'DebugKit.Toolbar',
 		'DataCenter.Flash',
 		'DataCenter.TagManager',
 		'Session',
