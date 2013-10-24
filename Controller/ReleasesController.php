@@ -232,12 +232,14 @@ class ReleasesController extends AppController {
 			if ($this->Release->validateAssociated($this->request->data)) {
 				if ($this->Release->save($this->request->data)) {
 					
-					// Save graphics
-					foreach ($this->request->data['Graphic'] as $g) {
-						$this->Graphic->create($g);
-						$this->Graphic->set('release_id', $this->Release->id);
-						if (! $this->Graphic->save()) {
-							$this->Flash->error('There was an error saving a release graphic ('.$g['image']['name'].'). Please try again.');
+					if (isset($this->request->data['Graphic'])) {
+						// Save graphics
+						foreach ($this->request->data['Graphic'] as $g) {
+							$this->Graphic->create($g);
+							$this->Graphic->set('release_id', $this->Release->id);
+							if (! $this->Graphic->save()) {
+								$this->Flash->error('There was an error saving a release graphic ('.$g['image']['name'].'). Please try again.');
+							}
 						}
 					}
 
