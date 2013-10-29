@@ -76,17 +76,6 @@ class Graphic extends AppModel {
 		$this->__folderToDelete = $this->field('dir');
 	}
 	
-	public function afterDelete() {
-		// Delete empty folder
-		App::uses('Folder', 'Utility');
-		$dir = $this->__folderToDelete;
-		$folder = new Folder(WWW_ROOT."img/releases/$dir");
-		$contents = $folder->find();
-		if (empty($contents)) {
-			$folder->delete();	
-		}
-	}
-	
 	public function getThumbnailFilename($full_filename) {
 		$filename_split = explode('.', $full_filename);
 		$thumbnail_filename = array_slice($filename_split, 0, count($filename_split) - 1);
