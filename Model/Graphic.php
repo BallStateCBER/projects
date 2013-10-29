@@ -61,7 +61,7 @@ class Graphic extends AppModel {
 			),
 			'valid_extension' => array(
 				'rule' => array('isValidExtension', array('jpg', 'jpeg', 'gif', 'png')),
-        		'message' => 'File has an invalid extension'
+        		'message' => 'File has an invalid extension (not jpg, jpeg, gif, or png)'
 			)
 		)
 	);
