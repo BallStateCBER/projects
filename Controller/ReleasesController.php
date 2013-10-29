@@ -203,46 +203,37 @@ class ReleasesController extends AppController {
 				$this->request->data['Release']['partner_id'] = $partner_id;
 			}
 			
-			// Fiddle with graphics data
+			// Process graphics
+			$this->loadModel('Graphic');
 			$images_were_uploaded = false;
 			foreach ($this->request->data['Graphic'] as $i => $g) {
-				// Only new graphics need fiddling with
-				if (isset($g['image'])) {
+				// Note if new images were uploaded and ignore any new graphics without uploaded images 
+				if (is_array($g['image'])) {
 					if (empty($g['image']['name'])) {
-						// Ignore any new graphics without uploaded images
 						unset($this->request->data['Graphic'][$i]);
 					} else {
-						// Populate the 'filename' field so that it can be validated
-						//$this->request->data['Graphic'][$i]['filename'] = $g['image']['name'];
 						$images_were_uploaded = true;
 					}
-				}
-			}
-			
-			// Process graphic removal
-			$this->loadModel('Graphic');
-			foreach ($this->request->data['Graphic'] as $k => $g) {
-				if (isset($g['remove']) && $g['remove']) {
-					$this->Graphic->delete($g['id']);
-					unset($this->request->data['Graphic'][$k]);
+					
+				// Handle removal of existing images
+				} else {
+					if (isset($g['remove']) && $g['remove']) {
+						$this->Graphic->delete($g['id']);
+						unset($this->request->data['Graphic'][$i]);
+					}
+					
 				}
 			}
 			
 			$this->Release->set($this->request->data);
-			if ($this->Release->validateAssociated($this->request->data)) {
-				if ($this->Release->save($this->request->data)) {
-					
-					if (isset($this->request->data['Graphic'])) {
-						// Save graphics
-						foreach ($this->request->data['Graphic'] as $g) {
-							$this->Graphic->create($g);
-							$this->Graphic->set('release_id', $this->Release->id);
-							if (! $this->Graphic->save()) {
-								$this->Flash->error('There was an error saving a release graphic ('.$g['image']['name'].'). Please try again.');
-							}
-						}
-					}
-
+			
+			/* For some reason, validateAssociated() changes its first parameter, turning
+			 * $data['Graphic'][0]... into $data['Graphic'][0]['Graphic']...
+			 * That's why a copy of $this->request->data is used. */
+			$data = $this->request->data;
+			
+			if ($this->Release->validateAssociated($data)) {
+				if ($this->Release->saveAssociated($this->request->data)) {
 					$this->Flash->success('Release updated.');
 					$this->redirect(array(
 						'controller' => 'releases', 
