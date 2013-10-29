@@ -19,7 +19,8 @@ class Graphic extends AppModel {
 				'thumbnailSizes' => array('thumb' => '195l'), // longest side will be 195px
 				'thumbnailMethod' => 'php',
 				'thumbnailName' => '{filename}.{size}', // e.g. origfilename.thumb.extension
-				'fileNameFunction' => 'sanitizeFileName'
+				'fileNameFunction' => 'sanitizeFileName',
+				'deleteFolderOnDelete' => true
 			)
 		)
 	);
