@@ -236,6 +236,10 @@ table.graphics .report_choices > div .sorting_options a.selected {
 table.graphics div.input {
   margin-bottom: 0;
 }
+table.graphics div.file {
+  max-width: 150px;
+  overflow: hidden;
+}
 table.graphics input[type=text] {
   width: 150px;
 }
