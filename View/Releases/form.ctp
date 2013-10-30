@@ -291,21 +291,24 @@
 					<?php echo $this->Form->input("Graphic.{i}.image", array(
 						'type' => 'file', 
 						'label' => false, 
-						'disabled' => true, 
+						'disabled' => true,
+						'required' => true,
 						'class' => 'validate[required,funcCall[checkExtension]] upload'
 					)); ?>
 				</td>
 				<td>
 					<?php echo $this->Form->input("Graphic.{i}.title", array(
 						'label' => false, 
-						'disabled' => true, 
+						'disabled' => true,
+						'required' => true,
 						'class' => 'validate[condRequired[Graphic{i}Image]]'
 					)); ?>
 				</td>
 				<td>
 					<?php echo $this->Form->input("Graphic.{i}.url", array(
 						'label' => false, 
-						'disabled' => true, 
+						'disabled' => true,
+						'required' => true, 
 						'class' => 'validate[condRequired[Graphic{i}Image]',
 						'after' => ' <a href="#" title="Find report" class="find_report"><img src="/data_center/img/icons/magnifier.png" alt="Find report" /></a>'
 					)); ?>
