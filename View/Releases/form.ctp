@@ -147,6 +147,17 @@
 						console.log('errorCode: '+errorCode);
 						console.log('errorMsg: '+errorMsg);
 						console.log('errorString: '+errorString);
+					},
+					onSelect: function (file) {
+						// Validate file type
+						var valid_extensions = ".$this->Js->object($report_filetypes).";
+						var extension = file.type.substr(1);
+						extension = extension.toLowerCase();
+						if (valid_extensions.indexOf(extension) == -1) {
+							var error_msg = 'Sorry, '+file.name+' has an invalid file type. Only files with these extensions can be uploaded: '+valid_extensions.join(', ');
+							insertFlashMessage(error_msg, 'error');
+							$('#upload_reports').uploadify('cancel', file.id);	
+						}
 					}
 				});
 			}); 
