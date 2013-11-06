@@ -123,11 +123,18 @@
 	<?php
 		$this->Html->script('/uploadify/jquery.uploadify.min.js', array('inline' => false));
 		$this->Html->css('uploadify.css', null, array('inline' => false));
+		
+		$valid_extensions = array();
+		foreach ($report_filetypes as $ext) {
+			$valid_extensions[] = '*.'.$ext;
+		}
+		
 		$this->Js->buffer("
 			$(function() {
 				$('#upload_reports').uploadify({
 					swf: '/uploadify/uploadify.swf',
 					uploader: '/releases/upload_reports',
+					fileTypeExts: '".implode('; ', $valid_extensions)."',
 					formData:	{
 						timestamp: ".time().",
 						token: '".md5('saltyseeberprojects'.time())."'
@@ -147,20 +154,9 @@
 						console.log('errorCode: '+errorCode);
 						console.log('errorMsg: '+errorMsg);
 						console.log('errorString: '+errorString);
-					},
-					onSelect: function (file) {
-						// Validate file type
-						var valid_extensions = ".$this->Js->object($report_filetypes).";
-						var extension = file.type.substr(1);
-						extension = extension.toLowerCase();
-						if (valid_extensions.indexOf(extension) == -1) {
-							var error_msg = 'Sorry, '+file.name+' has an invalid file type. Only files with these extensions can be uploaded: '+valid_extensions.join(', ');
-							insertFlashMessage(error_msg, 'error');
-							$('#upload_reports').uploadify('cancel', file.id);	
-						}
 					}
 				});
-			}); 
+			});
 		");
 	?>
 	<input type="file" name="file_upload" id="upload_reports" />
