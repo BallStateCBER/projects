@@ -135,9 +135,15 @@
 					swf: '/uploadify/uploadify.swf',
 					uploader: '/releases/upload_reports',
 					fileTypeExts: '".implode('; ', $valid_extensions)."',
-					formData:	{
+					formData: {
 						timestamp: ".time().",
-						token: '".md5('saltyseeberprojects'.time())."'
+						token: '".md5('saltyseeberprojects'.time())."',
+						overwrite: false
+					},
+					onUploadStart: function(file) {
+						if ($('#overwrite_reports').is(':checked')) {
+							$('#upload_reports').uploadify('settings', 'formData', {overwrite: true});
+						}
 					},
 					onUploadSuccess: function(file, data, response) {
 						if (data.indexOf('Error') == -1) {
@@ -160,6 +166,10 @@
 		");
 	?>
 	<input type="file" name="file_upload" id="upload_reports" />
+	<input type="checkbox" name="overwrite" value="1" id="overwrite_reports" />
+	<label for="overwrite_reports">
+		Overwrite reports with the same name
+	</label>
 </fieldset>
 
 <fieldset class="graphics">
