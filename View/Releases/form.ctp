@@ -168,7 +168,7 @@
 	<input type="file" name="file_upload" id="upload_reports" />
 	<input type="checkbox" name="overwrite" value="1" id="overwrite_reports" />
 	<label for="overwrite_reports">
-		Overwrite reports with the same name
+		Overwrite reports with the same filename
 	</label>
 </fieldset>
 
