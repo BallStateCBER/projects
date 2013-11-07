@@ -319,7 +319,7 @@ class ReleasesController extends AppController {
 			$fileParts = pathinfo($_FILES['Filedata']['name']);
 			
 			if (in_array(strtolower($fileParts['extension']), $fileTypes)) {
-				if (file_exists($targetFile)) {
+				if (file_exists($targetFile) && ! (isset($_POST['overwrite']) && $_POST['overwrite'])) {
 					echo "Error: {$_FILES['Filedata']['name']} has already been uploaded.";
 				} else {
 					if (move_uploaded_file($tempFile,$targetFile)) {
