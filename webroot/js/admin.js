@@ -73,6 +73,9 @@ function addGraphic(form_id) {
 	// Add the now-unique row 
 	$('table.graphics tbody').first().append(dummy_row);
 	
+	// Reset 'order' options
+	updateOrderSelectors();
+	
 	// Restart the validation engine so that this row is included
 	$('#'+form_id).validationEngine('attach');
 	
@@ -81,8 +84,10 @@ function addGraphic(form_id) {
 	if (! thead.is(':visible')) {
 		thead.show();
 	}
-	
-	// Set the number of options in the 'order' selector
+}
+
+// Sets the number of options in the 'order' selectors of the release form
+function updateOrderSelectors() {
 	var row_count = $('table.graphics tbody tr').length;
 	$('table.graphics select').each(function () {
 		var select = $(this);
