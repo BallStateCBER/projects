@@ -183,6 +183,7 @@ function setupReportFinder(html, cell, i) {
 
 function removeGraphic(button) {
 	$(button).closest('tr').remove();
+	updateOrderSelectors();
 	
 	// Hide table head if table body is empty
 	// Show the table head
