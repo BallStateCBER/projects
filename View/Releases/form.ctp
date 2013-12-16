@@ -277,7 +277,7 @@
 							<?php echo $this->Form->input("Graphic.$k.weight", array(
 								'label' => false,
 								'type' => 'select',
-								'options' => range(1, 5)
+								'options' => range(1, 10)
 							)); ?>
 						</td>
 					</tr>
@@ -328,6 +328,14 @@
 						'required' => true, 
 						'class' => 'validate[condRequired[Graphic{i}Image]',
 						'after' => ' <a href="#" title="Find report" class="find_report"><img src="/data_center/img/icons/magnifier.png" alt="Find report" /></a>'
+					)); ?>
+				</td>
+				<td>
+					<?php echo $this->Form->input("Graphic.{i}.weight", array(
+						'label' => false,
+						'disabled' => true,
+						'type' => 'select',
+						'options' => range(1, 10)
 					)); ?>
 				</td>
 			</tr>
