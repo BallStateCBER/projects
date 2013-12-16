@@ -277,7 +277,7 @@
 							<?php echo $this->Form->input("Graphic.$k.weight", array(
 								'label' => false,
 								'type' => 'select',
-								'options' => range(1, 10)
+								'options' => range(1, count($this->request->data['Graphic']))
 							)); ?>
 						</td>
 					</tr>
@@ -331,12 +331,19 @@
 					)); ?>
 				</td>
 				<td>
-					<?php echo $this->Form->input("Graphic.{i}.weight", array(
-						'label' => false,
-						'disabled' => true,
-						'type' => 'select',
-						'options' => range(1, 10)
-					)); ?>
+					<?php 
+						if (isset($this->request->data['Graphic'])) {
+							$options = range(1, count($this->request->data['Graphic']) + 1);
+						} else {
+							$options = array(1);
+						}
+						echo $this->Form->input("Graphic.{i}.weight", array(
+							'label' => false,
+							'disabled' => true,
+							'type' => 'select',
+							'options' => $options
+						));
+					?>
 				</td>
 			</tr>
 		</tfoot>
