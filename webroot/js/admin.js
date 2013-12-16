@@ -49,7 +49,7 @@ function addGraphic(form_id) {
 	var dummy_row = $('table.graphics tfoot .dummy_row').clone().removeClass('dummy_row');
 	
 	// Apply a unique key to each row
-	dummy_row.find('input').each(function () {
+	dummy_row.find('input, select').each(function () {
 		$(this).attr('id', this.id.replace('{i}', i));
 		$(this).attr('name', this.name.replace('{i}', i));
 		$(this).attr('class', this.className.replace('{i}', i));
@@ -81,6 +81,23 @@ function addGraphic(form_id) {
 	if (! thead.is(':visible')) {
 		thead.show();
 	}
+	
+	// Set the number of options in the 'order' selector
+	var row_count = $('table.graphics tbody tr').length;
+	$('table.graphics select').each(function () {
+		var select = $(this);
+		var selected = select.val();
+		select.empty();
+		for (var n = 1; n <= row_count; n++) {
+			var option = $('<option value=""></option>');
+			option.html(n);
+			option.val(n - 1);
+			if (selected == n - 1) {
+				option.attr('selected', 'selected');
+			}
+			select.append(option);
+		}
+	});
 }
 
 // Called when a 'find report' button is clicked
