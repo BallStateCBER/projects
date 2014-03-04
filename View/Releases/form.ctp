@@ -351,7 +351,18 @@
 </fieldset>
 
 <?php
-	echo $this->element('tags/editor', compact('available_tags', 'selected_tags'), array('plugin' => 'DataCenter'));
+	echo $this->element(
+		'tags/editor', 
+		array(
+			'available_tags' => $available_tags, 
+			'selected_tags' => isset($this->request->data['Tag']) ? $this->request->data['Tag'] : array(),
+			'hide_label' => true,
+			'allow_custom' => true
+		),
+		array(
+			'plugin' => 'DataCenter'
+		)
+	);
 	echo $this->Form->end('Submit');
 	echo $this->element('rich_text_editor_init', array(), array('plugin' => 'DataCenter'));
 ?>
