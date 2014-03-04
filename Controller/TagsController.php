@@ -83,4 +83,42 @@ class TagsController extends AppController {
 		$this->Flash->error('There was an error deleting that tag');
 		$this->redirect(array('action' => 'edit'));
 	}
+	
+	public function auto_complete() {
+		App::uses('Sanitize', 'Utility');
+		$string_to_complete = Sanitize::clean($_GET['term']);
+		$limit = 10;
+		
+		// Tag.name will be compared via LIKE to each of these, 
+		// in order, until $limit tags are found.
+		$like_conditions = array(
+			$string_to_complete,
+			$string_to_complete.' %',
+			$string_to_complete.'%',
+			'% '.$string_to_complete.'%',
+			'%'.$string_to_complete.'%'
+		);
+		
+		// Collect tags up to $limit
+		$tags = array();
+		foreach ($like_conditions as $like) {
+			if (count($tags) == $limit) {
+				break;	
+			}
+			$results = $this->Tag->find('all', array(
+				'fields' => array('Tag.name'),
+				'conditions' => array('Tag.name LIKE' => $like),
+				'contain' => false,
+				'limit' => $limit - count($tags)
+			));
+			foreach ($results as $result) {
+				if (! in_array($result['Tag']['name'], $tags)) {
+					$tags[] = $result['Tag']['name'];
+				}
+			}
+		}
+		
+		$this->set(compact('tags'));
+		$this->layout = 'blank';
+	}
 }
