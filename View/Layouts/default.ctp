@@ -4,9 +4,9 @@
 ?>
 
 <?php $this->start('subsite_title'); ?>
-	<h1 id="subsite_title" class="max_width_padded">
+	<h1 id="subsite_title" class="max_width">
 		<a href="/">
-			<?php echo Configure::read('data_center_subsite_title'); ?>
+			<img src="/img/Projects.jpg" alt="Projects and Publications" />
 		</a>
 	</h1>
 <?php $this->end(); ?>
