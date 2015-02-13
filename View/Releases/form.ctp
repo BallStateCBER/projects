@@ -23,14 +23,14 @@
 			}
 		});
 	");
-	
+
 	/* $i is the next key to be applied to a new input row.
 	 * It begins at zero (or the highest key of data['Graphic'] + 1)
-	 * and needs to be provided to jQuery. */ 
+	 * and needs to be provided to jQuery. */
 	if (isset($this->request->data['Graphic']) && ! empty($this->request->data['Graphic'])) {
 		$i = 1 + max(array_keys($this->request->data['Graphic']));
 	} else {
-		$i = 0;	
+		$i = 0;
 	}
 	$this->Js->buffer("$('body').data('graphics_iterator', $i);");
 ?>
@@ -45,9 +45,9 @@
 	}
 	echo $this->Form->input('title', array('class' => 'validate[required]'));
 	echo $this->Form->input('released', array(
-		'type' => 'date', 
+		'type' => 'date',
 		'dateFormat' => 'MDY',
-		'label' => 'Date Published', 
+		'label' => 'Date Published',
 		'minYear' => 2001,
 		'maxYear' => date('Y')
 	));
@@ -55,15 +55,15 @@
 
 <?php if (empty($partners)): ?>
 	<?php echo $this->Form->input('new_partner', array(
-		'type' => 'text', 
+		'type' => 'text',
 		'label' => 'Client, Partner, or Sponsor',
 		'class' => 'validate[required]'
 	)); ?>
 <?php else: ?>
 	<div id="choose_partner">
 		<?php echo $this->Form->input('partner_id', array(
-			'options' => $partners, 
-			'label' => 'Client, Partner, or Sponsor', 
+			'options' => $partners,
+			'label' => 'Client, Partner, or Sponsor',
 			'empty' => true,
 			'after' => ' <a href="#" id="add_partner_button">Add new</a>',
 			'class' => 'partner validate[funcCall[checkPartner]]'
@@ -71,7 +71,7 @@
 	</div>
 	<div id="add_partner" style="display: none;">
 		<?php echo $this->Form->input('new_partner', array(
-			'type' => 'text', 
+			'type' => 'text',
 			'label' => 'Client, Partner, or Sponsor',
 			'after' => ' <a href="#" id="choose_partner_button">Choose from list</a>',
 			'class' => 'partner validate[funcCall[checkPartner]]'
@@ -123,12 +123,12 @@
 	<?php
 		$this->Html->script('/uploadify/jquery.uploadify.min.js', array('inline' => false));
 		$this->Html->css('uploadify.css', null, array('inline' => false));
-		
+
 		$valid_extensions = array();
 		foreach ($report_filetypes as $ext) {
 			$valid_extensions[] = '*.'.$ext;
 		}
-		
+
 		$this->Js->buffer("
 			$(function() {
 				$('#upload_reports').uploadify({
@@ -219,8 +219,8 @@
 							</td>
 							<td>
 								<?php echo $this->Form->input("Graphic.$k.image", array(
-									'type' => 'file', 
-									'label' => false, 
+									'type' => 'file',
+									'label' => false,
 									'class' => 'validate[required] upload'
 								)); ?>
 							</td>
@@ -240,7 +240,7 @@
 								"); ?>
 							</td>
 							<td>
-								<?php 
+								<?php
 									$img_url = '/img/releases/';
 									$img_url .= $this->request->data['Graphic'][$k]['dir'].'/';
 									$img_url .= $this->Graphic->thumbnail($this->request->data['Graphic'][$k]['image']);
@@ -256,13 +256,13 @@
 						<?php endif; ?>
 						<td>
 							<?php echo $this->Form->input("Graphic.$k.title", array(
-								'label' => false, 
+								'label' => false,
 								'class' => "validate[condRequired[Graphic{$k}Image]]"
 							)); ?>
 						</td>
 						<td>
 							<?php echo $this->Form->input("Graphic.$k.url", array(
-								'label' => false, 
+								'label' => false,
 								'class' => "validate[condRequired[Graphic{$k}Image]]",
 								'after' =>  '<a href="#" title="Find report" class="find_report" id="find_report_button_'.$k.'"><img src="/data_center/img/icons/magnifier.png" alt="Find report" /></a>'
 							)); ?>
@@ -306,8 +306,8 @@
 				</td>
 				<td>
 					<?php echo $this->Form->input("Graphic.{i}.image", array(
-						'type' => 'file', 
-						'label' => false, 
+						'type' => 'file',
+						'label' => false,
 						'disabled' => true,
 						'required' => true,
 						'class' => 'validate[required,funcCall[checkExtension]] upload'
@@ -315,7 +315,7 @@
 				</td>
 				<td>
 					<?php echo $this->Form->input("Graphic.{i}.title", array(
-						'label' => false, 
+						'label' => false,
 						'disabled' => true,
 						'required' => true,
 						'class' => 'validate[condRequired[Graphic{i}Image]]'
@@ -323,15 +323,15 @@
 				</td>
 				<td>
 					<?php echo $this->Form->input("Graphic.{i}.url", array(
-						'label' => false, 
+						'label' => false,
 						'disabled' => true,
-						'required' => true, 
+						'required' => true,
 						'class' => 'validate[condRequired[Graphic{i}Image]',
 						'after' => ' <a href="#" title="Find report" class="find_report"><img src="/data_center/img/icons/magnifier.png" alt="Find report" /></a>'
 					)); ?>
 				</td>
 				<td>
-					<?php 
+					<?php
 						if (isset($this->request->data['Graphic'])) {
 							$options = range(1, count($this->request->data['Graphic']) + 1);
 						} else {
@@ -352,21 +352,21 @@
 
 <?php
 	$this->Html->css(
-		'/jquery_ui/css/smoothness/jquery-ui-1.10.4.custom.min.css', 
+		'/jquery_ui/css/smoothness/jquery-ui-1.10.4.custom.min.css',
 		array(
 			'inline' => false
 		)
 	);
 	$this->Html->script(
-		'/jquery_ui/js/jquery-ui-1.10.4.custom.min.js', 
+		'/jquery_ui/js/jquery-ui-1.10.4.custom.min.js',
 		array(
 			'inline' => false
 		)
 	);
 	echo $this->element(
-		'tags/editor', 
+		'tags/editor',
 		array(
-			'available_tags' => $available_tags, 
+			'available_tags' => $available_tags,
 			'selected_tags' => isset($this->request->data['Tag']) ? $this->request->data['Tag'] : array(),
 			'hide_label' => true,
 			'allow_custom' => true
@@ -376,5 +376,13 @@
 		)
 	);
 	echo $this->Form->end('Submit');
-	echo $this->element('rich_text_editor_init', array(), array('plugin' => 'DataCenter'));
+	echo $this->element(
+		'rich_text_editor_init',
+		array(
+			'customConfig' => Configure::read('ckeditor_custom_config')
+		),
+		array(
+			'plugin' => 'DataCenter'
+		)
+	);
 ?>
