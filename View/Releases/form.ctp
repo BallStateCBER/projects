@@ -377,12 +377,9 @@
 	);
 	echo $this->Form->end('Submit');
 	echo $this->element(
-		'rich_text_editor_init',
+		'DataCenter.rich_text_editor_init',
 		array(
 			'customConfig' => Configure::read('ckeditor_custom_config')
-		),
-		array(
-			'plugin' => 'DataCenter'
 		)
 	);
 ?>
