@@ -102,11 +102,22 @@ class AppController extends Controller {
 		$Partner = new Partner();
 
 		$Tag = new Tag();
-		$tags = $Tag->find('all', array(
-			'fields' => array('id', 'name', 'slug'),
-			'order' => 'name',
-			'contain' => array('Release' => array('fields' => array('id')))
-		));
+		$tags = $Tag->find(
+			'all',
+			array(
+				'fields' => array(
+					'id',
+					'name',
+					'slug'
+				),
+				'order' => 'name',
+				'contain' => array(
+					'Release' => array(
+						'fields' => array('id')
+					)
+				)
+			)
+		);
 		$tags_simple = array();
 		foreach ($tags as $result) {
 			if (! empty($result['Release'])) {
@@ -116,7 +127,12 @@ class AppController extends Controller {
 
 		$Release = new Release();
 		$Release->displayField = 'released';
-		$releases = $Release->find('list', array('order' => 'released DESC'));
+		$releases = $Release->find(
+			'list',
+			array(
+				'order' => 'released DESC'
+			)
+		);
 		$years = array();
 		foreach ($releases as $date) {
 			$year = substr($date, 0, 4);
@@ -126,15 +142,22 @@ class AppController extends Controller {
 		}
 
 		// Get a list of all partners and remove any not associated with releases
-		$partners = $Partner->find('all', array(
-			'order' => 'name ASC',
-			'fields' => array('id', 'name', 'short_name'),
-			'contain' => array(
-				'Release' => array(
-					'fields' => array('id')
+		$partners = $Partner->find(
+			'all',
+			array(
+				'order' => 'name ASC',
+				'fields' => array(
+					'id',
+					'name',
+					'short_name'
+				),
+				'contain' => array(
+					'Release' => array(
+						'fields' => array('id')
+					)
 				)
 			)
-		));
+		);
 		foreach ($partners as $k => $partner) {
 			if (empty($partner['Release'])) {
 				unset($partners[$k]);
