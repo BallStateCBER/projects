@@ -117,7 +117,9 @@
 	<ul class="footnote" style="display: none;" id="footnote_upload_reports">
 		<li>Click on <strong>Select Files</strong> above to upload one or more documents.</li>
 		<li>Files must have one of the following extensions: <?php echo $this->Text->toList($report_filetypes, 'or'); ?>.</li>
-		<li>Files larger than <?php echo $upload_mb; ?>MB will need to be uploaded via FTP client.</li>
+		<?php if ($upload_mb): ?>
+			<li>Files larger than <?php echo $upload_mb; ?>MB will need to be uploaded via FTP client.</li>
+		<?php endif; ?>
 		<li>These files will be uploaded to a reports folder and can be linked to with linked graphics or in a release's description.</li>
 	</ul>
 	<?php
