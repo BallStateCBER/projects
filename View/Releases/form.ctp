@@ -139,7 +139,7 @@
 					fileTypeExts: '".implode('; ', $valid_extensions)."',
 					formData: {
 						timestamp: ".time().",
-						token: '".md5('saltyseeberprojects'.time())."',
+						token: '".md5(Configure::read('upload_token').time())."',
 						overwrite: false
 					},
 					onUploadStart: function(file) {

@@ -10,7 +10,7 @@ class ReleasesController extends AppController {
 	public $paginate = array(
         'limit' => 5,
         'order' => array(
-        	'Release.released' => 'desc', 
+        	'Release.released' => 'desc',
         	'Release.created' => 'desc'
 		),
 		'contain' => array('Tag', 'Partner', 'Graphic')
@@ -18,25 +18,25 @@ class ReleasesController extends AppController {
     public $components = array('Search.Prg');
     public $report_filetypes = array('pdf', 'doc', 'docx', 'xls', 'xlsx');
 	public $presetVars = true; // Used by the Search plugin
-	
+
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->deny('add', 'delete', 'edit', 'list_reports');
 	}
-	
-	// Calls a page that refreshes the Data Center's homepage's cache of the latest release 
+
+	// Calls a page that refreshes the Data Center's homepage's cache of the latest release
 	private function __updateDataCenterHome() {
 		// Development server
 		if (stripos($_SERVER['SERVER_NAME'], 'localhost') !== false) {
 			$url = 'http://dchome.localhost/refresh_latest_release';
 		// Production server
 		} else {
-			$url = 'http://cberdata.org/refresh_latest_release';	
+			$url = 'http://cberdata.org/refresh_latest_release';
 		}
 		$results = trim(file_get_contents($url));
 		return (boolean) $results;
 	}
-	
+
 /**
  * index method
  *
@@ -77,12 +77,12 @@ class ReleasesController extends AppController {
 		$Partner = new Partner();
 		$partners = $Partner->find('list', array('order' => 'name ASC'));
 		$this->set(compact('partners'));
-		
+
 		if (! empty($this->request->data)) {
-			
+
 			// Process 'custom tags' field and eliminate duplicates
 			$this->TagManager->processTagInput($this->request->data);
-		
+
 			// Process partner data
 			if (! empty($this->request->data['Release']['new_partner'])) {
 				$new_partner = trim($this->request->data['Release']['new_partner']);
@@ -96,7 +96,7 @@ class ReleasesController extends AppController {
 				$this->request->data['Release']['new_partner'] = '';
 				$this->request->data['Release']['partner_id'] = $partner_id;
 			}
-			
+
 			// Fiddle with graphics data
 			$images_were_uploaded = false;
 			if (isset($this->request->data['Graphic'])) {
@@ -111,7 +111,7 @@ class ReleasesController extends AppController {
 					}
 				}
 			}
-			
+
 			$this->Release->create($this->request->data);
 			if ($this->Release->validateAssociated($this->request->data)) {
 				if ($this->Release->save($this->request->data)) {
@@ -128,12 +128,12 @@ class ReleasesController extends AppController {
 					$this->Flash->success('Release added.');
 					$this->__updateDataCenterHome();
 					$this->redirect(array(
-						'controller' => 'releases', 
-						'action' => 'view', 
+						'controller' => 'releases',
+						'action' => 'view',
 						'id' => $this->Release->id,
 						'slug' => $this->Release->field('slug')
 					));
-					
+
 				} else {
 					$this->Flash->error('The release could not be saved. Please try again.');
 				}
@@ -144,21 +144,21 @@ class ReleasesController extends AppController {
 				}
 			}
 		}
-		
+
 		// Sends $available_tags and $unlisted_tags to the view
 		$this->TagManager->prepareEditor($this);
-		
+
 		// Removes the 'required' attribute for the #ReleasePartnerId field in the view,
 		// which breaks the form if a new partner is entered
 		unset($this->Release->validate['partner_id']);
-		
+
 		$this->set(array(
 			'mode' => 'add',
 			'title_for_layout' => 'Add a New Release',
 			'report_filetypes' => $this->report_filetypes,
 			'session_id' => $this->Session->id()
 		));
-		
+
 		$this->render('/Releases/form');
 	}
 
@@ -176,19 +176,19 @@ class ReleasesController extends AppController {
 			$this->Flash->error('No ID specified. Which release do you want to edit?');
 			$this->redirect('/');
 		}
-		
+
 		$this->Release->id = $id;
-		
+
 		App::Uses('Partner', 'Model');
 		$Partner = new Partner();
 		$partners = $Partner->find('list', array('order' => 'name ASC'));
 		$this->set(compact('partners'));
-		
+
 		if (! empty($this->request->data)) {
-			
+
 			// Process 'custom tags' field and eliminate duplicates
 			$this->TagManager->processTagInput($this->request->data);
-			
+
 			// Process partner data
 			if (! empty($this->request->data['Release']['new_partner'])) {
 				$new_partner = trim($this->request->data['Release']['new_partner']);
@@ -202,42 +202,42 @@ class ReleasesController extends AppController {
 				$this->request->data['Release']['new_partner'] = '';
 				$this->request->data['Release']['partner_id'] = $partner_id;
 			}
-			
+
 			// Process graphics
 			$this->loadModel('Graphic');
 			$images_were_uploaded = false;
 			foreach ($this->request->data['Graphic'] as $i => $g) {
-				// Note if new images were uploaded and ignore any new graphics without uploaded images 
+				// Note if new images were uploaded and ignore any new graphics without uploaded images
 				if (is_array($g['image'])) {
 					if (empty($g['image']['name'])) {
 						unset($this->request->data['Graphic'][$i]);
 					} else {
 						$images_were_uploaded = true;
 					}
-					
+
 				// Handle removal of existing images
 				} else {
 					if (isset($g['remove']) && $g['remove']) {
 						$this->Graphic->delete($g['id']);
 						unset($this->request->data['Graphic'][$i]);
 					}
-					
+
 				}
 			}
-			
+
 			$this->Release->set($this->request->data);
-			
+
 			/* For some reason, validateAssociated() changes its first parameter, turning
 			 * $data['Graphic'][0]... into $data['Graphic'][0]['Graphic']...
 			 * That's why a copy of $this->request->data is used. */
 			$data = $this->request->data;
-			
+
 			if ($this->Release->validateAssociated($data)) {
 				if ($this->Release->saveAssociated($this->request->data)) {
 					$this->Flash->success('Release updated.');
 					$this->redirect(array(
-						'controller' => 'releases', 
-						'action' => 'view', 
+						'controller' => 'releases',
+						'action' => 'view',
 						'id' => $this->Release->id,
 						'slug' => $this->Release->field('slug')
 					));
@@ -254,10 +254,10 @@ class ReleasesController extends AppController {
 		} else {
 			$this->request->data = $this->Release->read();
 		}
-		
+
 		// Sends $available_tags and $unlisted_tags to the view
 		$this->TagManager->prepareEditor($this);
-		
+
 		$this->set(array(
 			'mode' => 'edit',
 			'release_id' => $id,
@@ -265,7 +265,7 @@ class ReleasesController extends AppController {
 			'report_filetypes' => $this->report_filetypes,
 			'session_id' => $this->Session->id()
 		));
-		
+
 		$this->render('/Releases/form');
 	}
 
@@ -290,7 +290,7 @@ class ReleasesController extends AppController {
 		}
 		$this->redirect(array('action' => 'index'));
 	}
-	
+
 	public function year($year = null) {
 		$this->set(array(
 			'year' => $year,
@@ -303,21 +303,21 @@ class ReleasesController extends AppController {
 			'title_for_layout' => $year.' Projects and Publications'
 		));
 	}
-	
+
 	public function upload_reports() {
 		$targetFolder = 'reports'; // Relative to the root
 
-		$verifyToken = md5('saltyseeberprojects' . $_POST['timestamp']);
+		$verifyToken = md5(Configure::read('upload_token') . $_POST['timestamp']);
 
 		if (!empty($_FILES) && $_POST['token'] == $verifyToken) {
 			$tempFile = $_FILES['Filedata']['tmp_name'];
 			$targetPath = WWW_ROOT.$targetFolder;
 			$targetFile = rtrim($targetPath,'/') . '/' . $_FILES['Filedata']['name'];
-			
+
 			// Validate the file type
 			$fileTypes = $this->report_filetypes; // File extensions
 			$fileParts = pathinfo($_FILES['Filedata']['name']);
-			
+
 			if (in_array(strtolower($fileParts['extension']), $fileTypes)) {
 				if (file_exists($targetFile) && ! (isset($_POST['overwrite']) && $_POST['overwrite'])) {
 					echo "Error: {$_FILES['Filedata']['name']} has already been uploaded.";
@@ -325,7 +325,7 @@ class ReleasesController extends AppController {
 					if (move_uploaded_file($tempFile,$targetFile)) {
 						echo "{$_FILES['Filedata']['name']} uploaded";
 					} else {
-						echo "Error uploading {$_FILES['Filedata']['name']}";	
+						echo "Error uploading {$_FILES['Filedata']['name']}";
 					}
 				}
 			} else {
@@ -335,7 +335,7 @@ class ReleasesController extends AppController {
 		$this->layout = 'DataCenter.blank';
 		$this->render('DataCenter.Common/blank');
 	}
-	
+
 	/* $row_i is the iterator that identifies which row of the 'add/edit linked graphics'
 	 * table is associated with this request. */
 	public function list_reports($row_i) {
@@ -364,7 +364,7 @@ class ReleasesController extends AppController {
 			'row_i' => $row_i
 		));
 	}
-	
+
 	// This provides a printout of serialized data used by the Data Center's homepage
 	public function latest() {
 		$release = $this->Release->find('first', array(
@@ -380,47 +380,47 @@ class ReleasesController extends AppController {
 		));
 		if (! empty($release)) {
 			$release['Release']['url'] = Router::url(array(
-				'controller' => 'releases', 
+				'controller' => 'releases',
 				'action' => 'view',
 				'id' => $release['Release']['id'],
 				'slug' => $release['Release']['slug']
 			), true);
 			if (! empty($release['Graphic'])) {
 				$this->loadModel('Graphic');
-				$release['Graphic'][0]['thumbnail'] = 
+				$release['Graphic'][0]['thumbnail'] =
 					Router::url('/', true).
 					'img/releases/'.$release['Graphic'][0]['dir'].'/'.
 					$this->Graphic->getThumbnailFilename($release['Graphic'][0]['image']);
-			} 
+			}
 		}
 		$this->set('release', $release);
 		$this->layout = 'ajax';
 	}
-	
+
 	public function search() {
 		$this->Prg->commonProcess();
 		$query = $this->passedArgs['q'];
-		
+
 		if ($query) {
-			
+
 			// Get releases with the query in their titles or descriptions
 			$this->paginate['conditions'] = $this->Release->parseCriteria($this->passedArgs);
 			$this->paginate['fields'] = array('id', 'title', 'slug', 'released', 'description');
 			$this->paginate['contain'] = false;
 			$this->paginate['limit'] = 20;
 			$releases = $this->paginate();
-			
+
 			// Get a list of matching tags
 			$tags = $this->Release->Tag->find('all', array(
 				'conditions' => array('name LIKE' => "%$query%"),
 				'fields' => array('id', 'name', 'slug'),
 				'contain' => false
 			));
-			
+
 		} else {
 			$releases = $tags = array();
 		}
-		
+
 		$this->set(array(
 			'title_for_layout' => "Search Results: $query",
 			'releases' => $releases,
