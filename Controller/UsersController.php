@@ -6,12 +6,19 @@ App::uses('AppController', 'Controller');
  * @property User $User
  */
 class UsersController extends AppController {
-	
+
 	public function beforeFilter() {
 	    parent::beforeFilter();
-	    $this->Auth->deny('add', 'change_password', 'edit', 'delete');
+	    $this->Auth->deny(
+	    	'add',
+	    	'change_password',
+	    	'edit',
+	    	'delete',
+	    	'index',
+	    	'view'
+		);
 	}
-	
+
 /**
  * index method
  *
@@ -98,7 +105,7 @@ class UsersController extends AppController {
 		$this->Flash->set(__('User was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
-	
+
 	public function login() {
 	    if ($this->request->is('post')) {
 	        if ($this->Auth->login()) {
@@ -109,11 +116,11 @@ class UsersController extends AppController {
 	    }
 	    $this->set('title_for_layout', 'Log In');
 	}
-	
+
 	public function logout() {
 		$this->redirect($this->Auth->logout());
 	}
-	
+
 	public function change_password() {
 		if ($this->request->is('post')) {
 			$this->request->data['User']['password'] = $this->request->data['User']['new_password'];
