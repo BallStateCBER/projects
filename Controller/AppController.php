@@ -149,7 +149,8 @@ class AppController extends Controller {
 				'fields' => array(
 					'id',
 					'name',
-					'short_name'
+					'short_name',
+					'slug'
 				),
 				'contain' => array(
 					'Release' => array(
