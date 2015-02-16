@@ -36,9 +36,9 @@ App::uses('Release', 'Model');
  */
 class AppController extends Controller {
 	public $helpers = array(
-		'Js' => array('Jquery'), 
-		'Html', 
-		'Text', 
+		'Js' => array('Jquery'),
+		'Html',
+		'Text',
 		'Session',
 		'Form'
 	);
@@ -51,15 +51,15 @@ class AppController extends Controller {
 			'username' => 'email',
 			'expires' => '+1 year'
 		),
-		
+
         'Auth' => array(
-			
+
             'loginRedirect' => array(
-            	'controller' => 'releases', 
+            	'controller' => 'releases',
             	'action' => 'index'
 			),
             'logoutRedirect' => array(
-            	'controller' => 'releases', 
+            	'controller' => 'releases',
             	'action' => 'index'
 			),
 			'authorize' => array('Controller'),
@@ -68,28 +68,28 @@ class AppController extends Controller {
 	                'fields' => array('username' => 'email')
 	            )
 	        )
-	        
+
         )
-        
+
 	);
-	
-	public function beforeFilter() {		
+
+	public function beforeFilter() {
 		$this->AutoLogin->settings = array(
 			// Model settings
 			'model' => 'User',
 			'username' => 'email',
 			'password' => 'password',
-	 
+
 			// Controller settings
 			'plugin' => '',
 			'controller' => 'users',
 			'loginAction' => 'login',
 			'logoutAction' => 'logout',
-	 
+
 			// Cookie settings
 			'cookieName' => 'rememberMe',
 			'expires' => '+1 year',
-	 
+
 			// Process logic
 			'active' => true,
 			'redirect' => true,
@@ -97,10 +97,10 @@ class AppController extends Controller {
 		);
 		$this->Auth->allow();
 	}
-	
+
 	public function beforeRender() {
 		$Partner = new Partner();
-		
+
 		$Tag = new Tag();
 		$tags = $Tag->find('all', array(
 			'fields' => array('id', 'name', 'slug'),
@@ -113,7 +113,7 @@ class AppController extends Controller {
 				$tags_simple[] = $result['Tag'];
 			}
 		}
-		
+
 		$Release = new Release();
 		$Release->displayField = 'released';
 		$releases = $Release->find('list', array('order' => 'released DESC'));
@@ -124,11 +124,11 @@ class AppController extends Controller {
 				$years[] = $year;
 			}
 		}
-		
+
 		// Get a list of all partners and remove any not associated with releases
 		$partners = $Partner->find('all', array(
 			'order' => 'name ASC',
-			'field' => array('id', 'name'),
+			'fields' => array('id', 'name', 'short_name'),
 			'contain' => array(
 				'Release' => array(
 					'fields' => array('id')
@@ -140,7 +140,7 @@ class AppController extends Controller {
 				unset($partners[$k]);
 			}
 		}
-		
+
 		$this->set(array(
 			'sidebar_vars' => array(
 				'partners' => $partners,
@@ -149,7 +149,7 @@ class AppController extends Controller {
 			)
 		));
 	}
-	
+
 	public function isAuthorized($user = null) {
 		return (bool)$this->Auth->user('id');
     }
