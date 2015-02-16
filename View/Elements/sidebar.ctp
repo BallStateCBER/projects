@@ -4,12 +4,18 @@
 <ul class="partners">
 	<?php foreach ($sidebar_vars['partners'] as $partner): ?>
 		<li>
-			<?php echo $this->Html->link($partner['Partner']['name'], array(
-				'controller' => 'partners', 
-				'action' => 'view', 
-				'id' => $partner['Partner']['id'], 
-				'slug' => $partner['Partner']['slug'] 
-			)); ?>
+			<?php echo $this->Html->link(
+				$partner['Partner']['short_name'],
+				array(
+					'controller' => 'partners',
+					'action' => 'view',
+					'id' => $partner['Partner']['id'],
+					'slug' => $partner['Partner']['slug']
+				),
+				array(
+					'title' => $partner['Partner']['name']
+				)
+			); ?>
 		</li>
 	<?php endforeach; ?>
 </ul>
@@ -21,10 +27,10 @@
 	<?php foreach ($sidebar_vars['tags'] as $tag): ?>
 		<li>
 			<?php echo $this->Html->link(ucwords($tag['name']), array(
-				'controller' => 'tags', 
-				'action' => 'view', 
-				'id' => $tag['id'], 
-				'slug' => $tag['slug'] 
+				'controller' => 'tags',
+				'action' => 'view',
+				'id' => $tag['id'],
+				'slug' => $tag['slug']
 			)); ?>
 		</li>
 	<?php endforeach; ?>
@@ -37,9 +43,9 @@
 	<?php foreach ($sidebar_vars['years'] as $year): ?>
 		<li>
 			<?php echo $this->Html->link($year, array(
-				'controller' => 'releases', 
-				'action' => 'year', 
-				'year' => $year 
+				'controller' => 'releases',
+				'action' => 'year',
+				'year' => $year
 			)); ?>
 		</li>
 	<?php endforeach; ?>
@@ -49,9 +55,9 @@
 	Search
 </h2>
 <?php echo $this->Form->create(
-	'Release', 
+	'Release',
 	array(
-		'method' => 'get', 
+		'method' => 'get',
 		'url' => array('controller' => 'releases', 'action' => 'search')
 	)
 ); ?>
@@ -72,8 +78,8 @@
 	</ul>
 <?php else: ?>
 	<?php echo $this->Html->link(
-		'Admin login', 
-		array('controller' => 'users', 'action' => 'login', 'admin' => false, 'plugin' => false), 
+		'Admin login',
+		array('controller' => 'users', 'action' => 'login', 'admin' => false, 'plugin' => false),
 		array('id' => 'login_link')
 	); ?>
 <?php endif; ?>
