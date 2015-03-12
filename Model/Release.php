@@ -11,11 +11,11 @@ class Release extends AppModel {
 			'label' => 'title',
 			'slug' => 'slug',
 			'separator' => '-',
-			'overwrite' => false   
+			'overwrite' => false
 		),
 		'Search.Searchable'
 	);
-	
+
 	public $hasMany = array(
 		'Graphic' => array(
 			'className' => 'Graphic',
@@ -24,27 +24,26 @@ class Release extends AppModel {
 			'dependent' => true
 		)
 	);
-	
+
 	public $belongsTo = array('Partner');
-	
+
 	public $hasAndBelongsToMany = array(
 		'Tag' => array(
 			'className' => 'Tag',
 			'joinTable' => 'releases_tags',
 			'foreignKey' => 'release_id',
 			'associationForeignKey' => 'tag_id',
-			'unique' => 'keepExisting',
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'finderQuery' => '',
-			'deleteQuery' => '',
-			'insertQuery' => ''
+			'unique' => 'keepExisting'
+		),
+		'Author' => array(
+			'className' => 'Author',
+			'joinTable' => 'authors_releases',
+			'foreignKey' => 'release_id',
+			'associationForeignKey' => 'author_id',
+			'unique' => 'keepExisting'
 		)
 	);
-	
+
 	public $validate = array(
 		'title' => array(
 			'notempty' => array(
@@ -77,14 +76,14 @@ class Release extends AppModel {
 			)
 		)
 	);
-	
+
 	// Used by the Search plugin
 	public $filterArgs = array(
 		array('name' => 'q', 'type' => 'query', 'method' => 'filterQuery')
 		//array('name' => 'q', 'type' => 'like')
 		//'connectorAnd' => '+', 'connectorOr' => ','
 	);
-	
+
 	public function filterQuery($data = array()) {
 		if (empty($data['q'])) {
 			return array();

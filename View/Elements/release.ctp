@@ -4,7 +4,7 @@
 			'controller' => 'releases', 'action' => 'view', 'id' => $release['Release']['id'], 'slug' => $release['Release']['slug']
 		)); ?>
 	</h1>
-	
+
 	<?php if ($this->Session->read('Auth.User')): ?>
 		<span class="controls">
 			<?php echo $this->Html->link(
@@ -21,29 +21,49 @@
 			<?php //echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $release['Release']['id']), null, __('Are you sure you want to delete # %s?', $release['Release']['id'])); ?>
 		</span>
 	<?php endif; ?>
-	
+
 	<table>
 		<tbody>
 			<tr>
 				<td class="description_col">
-					<?php echo $release['Release']['description']; ?>	
-				
+					<?php echo $release['Release']['description']; ?>
+
 					<?php if (! empty($release['Tag'])):?>
 						<p class="tags">
 							Tags:
-							<?php 
+							<?php
 								$tag_links = array();
 								foreach ($release['Tag'] as $tag) {
 									$tag_links[] = $this->Html->link(
 										$tag['name'],
-										array('controller' => 'tags', 'action' => 'view', 'id' => $tag['id'], 'slug' => $tag['slug']) 
-									); 
+										array('controller' => 'tags', 'action' => 'view', 'id' => $tag['id'], 'slug' => $tag['slug'])
+									);
 								}
 								echo implode(', ', $tag_links);
 							?>
 						</p>
 					<?php endif; ?>
-					
+
+					<?php if (! empty($release['Author'])):?>
+						<p class="authors">
+							<?php echo __n('Author', 'Authors', count($release['Author'])); ?>:
+							<?php
+								$author_links = array();
+								foreach ($release['Author'] as $author) {
+									$author_links[] = $this->Html->link(
+										$author['name'],
+										array(
+											'controller' => 'authors',
+											'action' => 'view',
+											$author['id']
+										)
+									);
+								}
+								echo implode(', ', $author_links);
+							?>
+						</p>
+					<?php endif; ?>
+
 					<p class="partner">
 						<?php echo $this->Html->link($release['Partner']['name'], array(
 							'controller' => 'partners', 'action' => 'view', 'id' => $release['Partner']['id'], 'slug' => $release['Partner']['slug']
@@ -54,8 +74,8 @@
 					<p class="date">
 						Published <?php echo date('F j, Y', strtotime($release['Release']['released'])); ?>
 					</p>
-					
-					<?php if (! empty($release['Graphic'])): ?>					
+
+					<?php if (! empty($release['Graphic'])): ?>
 						<table>
 							<tr>
 								<?php foreach ($release['Graphic'] as $k => $graphic): ?>
@@ -65,7 +85,7 @@
 										</td>
 									<?php endif; ?>
 									<td>
-										<?php 
+										<?php
 											$img_src = '/img/releases/'.$graphic['dir'].'/'.$this->Graphic->thumbnail($graphic['image']);
 											echo $this->Html->link(
 												"<div class=\"graphic\"><img src=\"$img_src\" /></div>{$graphic['title']}",
