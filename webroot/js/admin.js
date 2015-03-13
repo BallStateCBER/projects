@@ -226,6 +226,29 @@ var releaseForm = {
 				alert('Please click "add" to add '+author_name+' to this release.');
 			}
 		});
+		$('#ReleaseForm').validationEngine({
+			autoHidePrompt: true,
+			'custom_error_messages': {
+				'.upload': {'required': {'message': 'You must upload a file'}},
+				'.partner': {'required': {'message': ' '}}
+			}
+		});
+		$('#add_partner_button').click(function (event) {
+			event.preventDefault();
+			$('#ReleasePartnerId').val('');
+			$('#choose_partner').hide();
+			$('#add_partner').show();
+		});
+		$('#choose_partner_button').click(function (event) {
+			event.preventDefault();
+			$('#ReleaseNewPartner').val('');
+			$('#choose_partner').show();
+			$('#add_partner').hide();
+		});
+		$('#footnote_upload_reports_handle').click(function(event) {
+			event.preventDefault();
+			$('#footnote_upload_reports').toggle();
+		});
 	},
 	hasUnaddedAuthor: function () {
 		var input = $('#new_author input');

@@ -3,22 +3,20 @@
 ?>
 
 <?php
-	$this->Html->script('admin', array('inline' => false));
-
-	// Set up validation
+	// Load validation library
 	$this->Html->script('jquery.validationEngine', array('inline' => false));
 	$this->Html->script('jquery.validationEngine-en', array('inline' => false));
 	$this->Html->css('validationEngine.jquery', null, array('inline' => false));
-	$this->Js->buffer("
-		$('#ReleaseForm').validationEngine({
-			autoHidePrompt: true,
-			'custom_error_messages': {
-				'.upload': {'required': {'message': 'You must upload a file'}},
-				'.partner': {'required': {'message': ' '}}
-			}
-		});
-	");
 
+	// Load uploadify library
+	$this->Html->script('/uploadify/jquery.uploadify.min.js', array('inline' => false));
+	$this->Html->css('uploadify.css', null, array('inline' => false));
+
+	$valid_extensions = array();
+	foreach ($report_filetypes as $ext) {
+		$valid_extensions[] = '*.'.$ext;
+	}
+	$this->Html->script('admin', array('inline' => false));
 	$this->Js->buffer("releaseForm.init();");
 
 	/* $i is the next key to be applied to a new input row.
@@ -80,20 +78,6 @@
 			'class' => 'partner validate[funcCall[checkPartner]]'
 		)); ?>
 	</div>
-	<?php $this->Js->buffer("
-		$('#add_partner_button').click(function (event) {
-			event.preventDefault();
-			$('#ReleasePartnerId').val('');
-			$('#choose_partner').hide();
-			$('#add_partner').show();
-		});
-		$('#choose_partner_button').click(function (event) {
-			event.preventDefault();
-			$('#ReleaseNewPartner').val('');
-			$('#choose_partner').show();
-			$('#add_partner').hide();
-		});
-	"); ?>
 <?php endif; ?>
 
 <?php echo $this->Form->input('author', array(
@@ -136,12 +120,6 @@
 		<a href="#" id="footnote_upload_reports_handle">
 			<img src="/data_center/img/icons/information.png" alt="More info" />
 		</a>
-		<?php $this->Js->buffer("
-			$('#footnote_upload_reports_handle').click(function(event) {
-				event.preventDefault();
-				$('#footnote_upload_reports').toggle();
-			});
-		"); ?>
 	</legend>
 	<?php
 		$max_upload = (int)(ini_get('upload_max_filesize'));
@@ -158,14 +136,6 @@
 		<li>These files will be uploaded to a reports folder and can be linked to with linked graphics or in a release's description.</li>
 	</ul>
 	<?php
-		$this->Html->script('/uploadify/jquery.uploadify.min.js', array('inline' => false));
-		$this->Html->css('uploadify.css', null, array('inline' => false));
-
-		$valid_extensions = array();
-		foreach ($report_filetypes as $ext) {
-			$valid_extensions[] = '*.'.$ext;
-		}
-
 		$this->Js->buffer("
 			$(function() {
 				$('#upload_reports').uploadify({
