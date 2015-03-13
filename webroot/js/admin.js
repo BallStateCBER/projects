@@ -249,6 +249,20 @@ var releaseForm = {
 			event.preventDefault();
 			$('#footnote_upload_reports').toggle();
 		});
+		$('#footnote_upload_graphics_handle').click(function(event) {
+			event.preventDefault();
+			$('#footnote_upload_graphics').toggle();
+		});
+		$('a.remove_graphic').each(function() {
+			$(this).click(function(event) {
+				event.preventDefault();
+				removeGraphic(this);
+			});
+		});
+		$('a.add_graphic').click(function(event) {
+			event.preventDefault();
+			addGraphic('ReleaseAddForm');
+		});
 	},
 	hasUnaddedAuthor: function () {
 		var input = $('#new_author input');

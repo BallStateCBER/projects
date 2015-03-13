@@ -156,12 +156,6 @@
 		<a href="#" id="footnote_upload_graphics_handle">
 			<img src="/data_center/img/icons/information.png" alt="More info" />
 		</a>
-		<?php $this->Js->buffer("
-			$('#footnote_upload_graphics_handle').click(function(event) {
-				event.preventDefault();
-				$('#footnote_upload_graphics').toggle();
-			});
-		"); ?>
 	</legend>
 	<ul class="footnote" style="display: none;" id="footnote_upload_graphics">
 		<li>Images must be .jpg, .jpeg, .gif, or .png.</li>
@@ -186,14 +180,6 @@
 								<a href="#" class="remove_graphic">
 									<img src="/data_center/img/icons/cross.png" alt="Remove" />
 								</a>
-								<?php $this->Js->buffer("
-									$('a.remove_graphic').each(function() {
-										$(this).click(function(event) {
-											event.preventDefault();
-											removeGraphic(this);
-										});
-									});
-								"); ?>
 							</td>
 							<td>
 								<?php echo $this->Form->input("Graphic.$k.image", array(
@@ -208,14 +194,6 @@
 									'type' => 'checkbox',
 									'label' => false
 								)); ?>
-								<?php $this->Js->buffer("
-									$('a.remove_graphic').each(function() {
-										$(this).click(function(event) {
-											event.preventDefault();
-											removeGraphic(this);
-										});
-									});
-								"); ?>
 							</td>
 							<td>
 								<?php
@@ -268,12 +246,6 @@
 					<a href="#" class="add_graphic">
 						<img src="/data_center/img/icons/plus.png" /> Add a linked graphic
 					</a>
-					<?php $this->Js->buffer("
-						$('a.add_graphic').click(function(event) {
-							event.preventDefault();
-							addGraphic('ReleaseAddForm');
-						});
-					"); ?>
 				</th>
 			</tr>
 			<tr class="dummy_row">
