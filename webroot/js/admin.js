@@ -208,30 +208,7 @@ var releaseForm = {
 		});
 		$('#add_author_button').click(function (event) {
 			event.preventDefault();
-			var name = $('#new_author input').val().replace('"', '\'');
-			if (name == '') {
-				return;
-			}
-			var li = $(
-				'<li>'+
-					name+
-					'<input type="hidden" name="data[new_authors][]" value="'+name+'" />'+
-					'<button>X</button>'+
-				'</li>'
-			);
-			li.hide();
-			li.children('button').click(function (event) {
-				event.preventDefault();
-				var container = $(this).parent();
-				container.slideUp(300, function () {
-					container.remove();
-				});
-			});
-			$('#authors_container').append(li);
-			li.slideDown();
-			$('#new_author').slideUp(300, function () {
-				$(this).find('input').val('');
-			});
+			releaseForm.addAuthor();
 		});
 		$('#cancel_add_author_button').click(function (event) {
 			event.preventDefault();
@@ -240,38 +217,67 @@ var releaseForm = {
 			});
 		});
 		$('#ReleaseAuthor').change(function (event) {
-			var select = $(this);
-			var author_id = select.val();
-			selected = select.find('option:selected');
-			selected.removeAttr('selected');
-	
-			if (author_id == '') {
-				return;
-			}
-	
-			// Do nothing if author is already selected
-			if ($('#authors_container input[value='+author_id+']').length > 0) {
-				return;
-			}
-	
-			var author_name = selected.text();
-			var li = $(
-				'<li>'+
-					author_name+
-					'<input type="hidden" name="data[Author][Author][]" value="'+author_id+'" />'+
-					'<button>X</button>'+
-				'</li>'
-			);
-			li.hide();
-			li.children('button').click(function (event) {
-				event.preventDefault();
-				var container = $(this).parent();
-				container.slideUp(300, function () {
-					container.remove();
-				});
-			});
-			$('#authors_container').append(li);
-			li.slideDown();
+			releaseForm.selectAuthor();
 		});
+	},
+	addAuthor: function () {
+		var name = $('#new_author input').val().replace('"', '\'');
+		if (name == '') {
+			return;
+		}
+		var li = $(
+			'<li>'+
+				name+
+				'<input type="hidden" name="data[new_authors][]" value="'+name+'" />'+
+				'<button>X</button>'+
+			'</li>'
+		);
+		li.hide();
+		li.children('button').click(function (event) {
+			event.preventDefault();
+			var container = $(this).parent();
+			container.slideUp(300, function () {
+				container.remove();
+			});
+		});
+		$('#authors_container').append(li);
+		li.slideDown();
+		$('#new_author').slideUp(300, function () {
+			$(this).find('input').val('');
+		});
+	},
+	selectAuthor: function () {
+		var select = $('#ReleaseAuthor');
+		var author_id = select.val();
+		selected = select.find('option:selected');
+		selected.removeAttr('selected');
+		
+		if (author_id == '') {
+			return;
+		}
+
+		// Do nothing if author is already selected
+		if ($('#authors_container input[value='+author_id+']').length > 0) {
+			return;
+		}
+
+		var author_name = selected.text();
+		var li = $(
+			'<li>'+
+				author_name+
+				'<input type="hidden" name="data[Author][Author][]" value="'+author_id+'" />'+
+				'<button>X</button>'+
+			'</li>'
+		);
+		li.hide();
+		li.children('button').click(function (event) {
+			event.preventDefault();
+			var container = $(this).parent();
+			container.slideUp(300, function () {
+				container.remove();
+			});
+		});
+		$('#authors_container').append(li);
+		li.slideDown();
 	}
 };
