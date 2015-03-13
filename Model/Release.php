@@ -40,7 +40,7 @@ class Release extends AppModel {
 			'joinTable' => 'authors_releases',
 			'foreignKey' => 'release_id',
 			'associationForeignKey' => 'author_id',
-			'unique' => 'keepExisting'
+			'unique' => true
 		)
 	);
 

@@ -52,7 +52,7 @@ class Author extends AppModel {
 			'joinTable' => 'authors_releases',
 			'foreignKey' => 'author_id',
 			'associationForeignKey' => 'release_id',
-			'unique' => 'keepExisting'
+			'unique' => true
 		)
 	);
 
