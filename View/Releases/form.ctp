@@ -9,13 +9,8 @@
 	$this->Html->script('jquery.validationEngine', array('inline' => false));
 	$this->Html->script('jquery.validationEngine-en', array('inline' => false));
 	$this->Html->css('validationEngine.jquery', null, array('inline' => false));
-	if ($mode == 'add') {
-		$form_id = 'ReleaseAddForm';
-	} elseif ($mode == 'edit') {
-		$form_id = 'ReleaseEditForm';
-	}
 	$this->Js->buffer("
-		$('#$form_id').validationEngine({
+		$('#ReleaseForm').validationEngine({
 			autoHidePrompt: true,
 			'custom_error_messages': {
 				'.upload': {'required': {'message': 'You must upload a file'}},
