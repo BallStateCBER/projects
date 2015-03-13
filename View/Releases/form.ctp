@@ -41,7 +41,13 @@
 	<?php echo $title_for_layout; ?>
 </h1>
 <?php
-	echo $this->Form->create('Release', array('type' => 'file'));
+	echo $this->Form->create(
+		'Release',
+		array(
+			'id' => 'ReleaseForm',
+			'type' => 'file'
+		)
+	);
 	if ($mode == 'edit') {
 		echo $this->Form->input('id', array('type' => 'hidden', 'value' => $release_id));
 	}

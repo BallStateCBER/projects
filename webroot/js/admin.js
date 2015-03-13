@@ -219,6 +219,17 @@ var releaseForm = {
 		$('#ReleaseAuthor').change(function (event) {
 			releaseForm.selectAuthor();
 		});
+		$('#ReleaseForm').submit(function (event) {
+			if (releaseForm.hasUnaddedAuthor()) {
+				event.preventDefault();
+				var author_name = $('#new_author input').val();
+				alert('Please click "add" to add '+author_name+' to this release.');
+			}
+		});
+	},
+	hasUnaddedAuthor: function () {
+		var input = $('#new_author input');
+		return input.is(':visible') && input.val() != '';
 	},
 	addAuthor: function () {
 		var name = $('#new_author input').val().replace('"', '\'');
