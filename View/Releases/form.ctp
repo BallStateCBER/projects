@@ -8,16 +8,24 @@
 	$this->Html->script('jquery.validationEngine-en', array('inline' => false));
 	$this->Html->css('validationEngine.jquery', null, array('inline' => false));
 
-	// Load uploadify library
-	$this->Html->script('/uploadify/jquery.uploadify.min.js', array('inline' => false));
-	$this->Html->css('uploadify.css', null, array('inline' => false));
-
 	$valid_extensions = array();
 	foreach ($report_filetypes as $ext) {
 		$valid_extensions[] = '*.'.$ext;
 	}
 	$this->Html->script('admin', array('inline' => false));
 	$this->Js->buffer("releaseForm.init();");
+
+	// Load uploadify library
+	$this->Html->script('/uploadify/jquery.uploadify.min.js', array('inline' => false));
+	$this->Html->css('uploadify.css', null, array('inline' => false));
+	$this->Js->buffer("
+		releaseForm.setupUploadify({
+			valid_extensions: '".implode('; ', $valid_extensions)."',
+			time: ".time().",
+			token: '".md5(Configure::read('upload_token').time())."'
+		});
+	");
+
 
 	/* $i is the next key to be applied to a new input row.
 	 * It begins at zero (or the highest key of data['Graphic'] + 1)
@@ -135,43 +143,6 @@
 		<?php endif; ?>
 		<li>These files will be uploaded to a reports folder and can be linked to with linked graphics or in a release's description.</li>
 	</ul>
-	<?php
-		$this->Js->buffer("
-			$(function() {
-				$('#upload_reports').uploadify({
-					swf: '/uploadify/uploadify.swf',
-					uploader: '/releases/upload_reports',
-					fileTypeExts: '".implode('; ', $valid_extensions)."',
-					formData: {
-						timestamp: ".time().",
-						token: '".md5(Configure::read('upload_token').time())."',
-						overwrite: false
-					},
-					onUploadStart: function(file) {
-						if ($('#overwrite_reports').is(':checked')) {
-							$('#upload_reports').uploadify('settings', 'formData', {overwrite: true});
-						}
-					},
-					onUploadSuccess: function(file, data, response) {
-						if (data.indexOf('Error') == -1) {
-							var classname = 'success';
-						} else {
-							var classname = 'error';
-						}
-						insertFlashMessage(data, classname);
-						console.log('Upload result: '+data);
-					},
-					onUploadError: function(file, errorCode, errorMsg, errorString) {
-						console.log('Upload error...');
-						console.log('file: '+file);
-						console.log('errorCode: '+errorCode);
-						console.log('errorMsg: '+errorMsg);
-						console.log('errorString: '+errorString);
-					}
-				});
-			});
-		");
-	?>
 	<input type="file" name="file_upload" id="upload_reports" />
 	<input type="checkbox" name="overwrite" value="1" id="overwrite_reports" />
 	<label for="overwrite_reports">

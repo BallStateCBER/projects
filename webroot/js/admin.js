@@ -313,5 +313,38 @@ var releaseForm = {
 		});
 		$('#authors_container').append(li);
 		li.slideDown();
+	},
+	setupUploadify: function (params) {
+		$('#upload_reports').uploadify({
+			swf: '/uploadify/uploadify.swf',
+			uploader: '/releases/upload_reports',
+			fileTypeExts: params.valid_extensions,
+			formData: {
+				timestamp: params.time,
+				token: params.token,
+				overwrite: false
+			},
+			onUploadStart: function(file) {
+				if ($('#overwrite_reports').is(':checked')) {
+					$('#upload_reports').uploadify('settings', 'formData', {overwrite: true});
+				}
+			},
+			onUploadSuccess: function(file, data, response) {
+				if (data.indexOf('Error') == -1) {
+					var classname = 'success';
+				} else {
+					var classname = 'error';
+				}
+				insertFlashMessage(data, classname);
+				console.log('Upload result: '+data);
+			},
+			onUploadError: function(file, errorCode, errorMsg, errorString) {
+				console.log('Upload error...');
+				console.log('file: '+file);
+				console.log('errorCode: '+errorCode);
+				console.log('errorMsg: '+errorMsg);
+				console.log('errorString: '+errorString);
+			}
+		});
 	}
 };
