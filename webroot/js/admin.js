@@ -192,3 +192,90 @@ function removeGraphic(button) {
 		$('table.graphics thead').first().hide();
 	}
 }
+
+var releaseForm = {
+	init: function () {
+		$('#add_author_toggler').click(function (event) {
+			event.preventDefault();
+			$('#new_author').slideToggle();
+		});
+		$('#authors_container button').click(function (event) {
+			event.preventDefault();
+			var container = $(this).parent();
+			container.slideUp(300, function () {
+				container.remove();
+			});
+		});
+		$('#add_author_button').click(function (event) {
+			event.preventDefault();
+			var name = $('#new_author input').val().replace('"', '\'');
+			if (name == '') {
+				return;
+			}
+			var li = $(
+				'<li>'+
+					name+
+					'<input type="hidden" name="data[new_authors][]" value="'+name+'" />'+
+					'<button>X</button>'+
+				'</li>'
+			);
+			li.hide();
+			li.children('button').click(function (event) {
+				event.preventDefault();
+				var container = $(this).parent();
+				container.slideUp(300, function () {
+					container.remove();
+				});
+			});
+			$('#authors_container').append(li);
+			li.slideDown();
+			$('#new_author').slideUp(300, function () {
+				$(this).find('input').val('');
+			});
+		});
+		$('#cancel_add_author_button').click(function (event) {
+			event.preventDefault();
+			$('#new_author').slideUp(300, function () {
+				$(this).find('input').val('');
+			});
+		});
+		$('#ReleaseAuthor').change(function (event) {
+			var select = $(this);
+			var author_id = select.val();
+			selected = select.find('option:selected');
+			selected.removeAttr('selected');
+	
+			if (author_id == '') {
+				return;
+			}
+	
+			// Do nothing if author is already selected
+			if ($('#authors_container input[value='+author_id+']').length > 0) {
+				return;
+			}
+	
+			var author_name = selected.text();
+			var i = $('#authors_container').children('li').length;
+			while ($('#authors_container input[data-iter='+i+']').length > 0) {
+				i++;
+			}
+			var li = $(
+				'<li>'+
+					author_name+
+					'<input type="hidden" name="data[Author][Author]['+i+']" value="'+author_id+'" data-iter="'+i+'" />'+
+					'<button>X</button>'+
+				'</li>'
+			);
+			li.hide();
+			li.children('button').click(function (event) {
+				event.preventDefault();
+				var container = $(this).parent();
+				container.slideUp(300, function () {
+					container.remove();
+				});
+			});
+			$('#authors_container').append(li);
+			li.slideDown();
+		});
+	}
+};
