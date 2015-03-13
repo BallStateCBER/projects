@@ -115,10 +115,10 @@
 </div>
 <ul id="authors_container">
 	<?php if (isset($this->request->data['Author'])): ?>
-		<?php foreach ($this->request->data['Author'] as $i => $author): ?>
+		<?php foreach ($this->request->data['Author'] as $author): ?>
 			<li>
 				<?php echo $author['name']; ?>
-				<input type="hidden" name="data[Author][Author][<?php echo $i; ?>]" value="<?php echo $author['id']; ?>" data-iter="<?php echo $i; ?>" />
+				<input type="hidden" name="data[Author][Author][]" value="<?php echo $author['id']; ?>" />
 				<button>
 					X
 				</button>

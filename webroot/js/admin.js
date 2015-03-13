@@ -255,14 +255,10 @@ var releaseForm = {
 			}
 	
 			var author_name = selected.text();
-			var i = $('#authors_container').children('li').length;
-			while ($('#authors_container input[data-iter='+i+']').length > 0) {
-				i++;
-			}
 			var li = $(
 				'<li>'+
 					author_name+
-					'<input type="hidden" name="data[Author][Author]['+i+']" value="'+author_id+'" data-iter="'+i+'" />'+
+					'<input type="hidden" name="data[Author][Author][]" value="'+author_id+'" />'+
 					'<button>X</button>'+
 				'</li>'
 			);
