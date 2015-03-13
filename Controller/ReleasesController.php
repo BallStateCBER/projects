@@ -37,6 +37,19 @@ class ReleasesController extends AppController {
 		return (boolean) $results;
 	}
 
+	private function __processNewAuthors() {
+		if (! isset($this->request->data['new_authors']) || empty($this->request->data['new_authors'])) {
+			return;
+		}
+		foreach ($this->request->data['new_authors'] as $author) {
+			$this->Release->Author->create();
+			$this->Release->Author->save(array(
+				'name' => $author
+			));
+			$this->request->data['Author']['Author'][] = $this->Release->Author->getInsertID();
+		}
+	}
+
 /**
  * index method
  *
@@ -82,6 +95,8 @@ class ReleasesController extends AppController {
 
 			// Process 'custom tags' field and eliminate duplicates
 			$this->TagManager->processTagInput($this->request->data);
+
+			$this->__processNewAuthors();
 
 			// Process partner data
 			if (! empty($this->request->data['Release']['new_partner'])) {
@@ -156,7 +171,12 @@ class ReleasesController extends AppController {
 			'mode' => 'add',
 			'title_for_layout' => 'Add a New Release',
 			'report_filetypes' => $this->report_filetypes,
-			'session_id' => $this->Session->id()
+			'session_id' => $this->Session->id(),
+			'authors' => $this->Release->Author->find('list', array(
+				'order' => array(
+					'Author.name' => 'ASC'
+				)
+			))
 		));
 
 		$this->render('/Releases/form');
@@ -188,6 +208,12 @@ class ReleasesController extends AppController {
 
 			// Process 'custom tags' field and eliminate duplicates
 			$this->TagManager->processTagInput($this->request->data);
+
+			$this->__processNewAuthors();
+			if (! isset($this->request->data['Author']['Author'])) {
+				// This allows the last author to be removed
+				$this->request->data['Author']['Author'] = array();
+			}
 
 			// Process partner data
 			if (! empty($this->request->data['Release']['new_partner'])) {
@@ -263,7 +289,12 @@ class ReleasesController extends AppController {
 			'release_id' => $id,
 			'title_for_layout' => 'Edit Release',
 			'report_filetypes' => $this->report_filetypes,
-			'session_id' => $this->Session->id()
+			'session_id' => $this->Session->id(),
+			'authors' => $this->Release->Author->find('list', array(
+				'order' => array(
+					'Author.name' => 'ASC'
+				)
+			))
 		));
 
 		$this->render('/Releases/form');
