@@ -5,6 +5,12 @@
 		)); ?>
 	</h1>
 
+	<p class="partner">
+		<?php echo $this->Html->link($release['Partner']['name'], array(
+			'controller' => 'partners', 'action' => 'view', 'id' => $release['Partner']['id'], 'slug' => $release['Partner']['slug']
+		)); ?>
+	</p>
+
 	<?php if ($this->Session->read('Auth.User')): ?>
 		<span class="controls">
 			<?php echo $this->Html->link(
@@ -64,11 +70,6 @@
 						</p>
 					<?php endif; ?>
 
-					<p class="partner">
-						<?php echo $this->Html->link($release['Partner']['name'], array(
-							'controller' => 'partners', 'action' => 'view', 'id' => $release['Partner']['id'], 'slug' => $release['Partner']['slug']
-						)); ?>
-					</p>
 				</td>
 				<td class="graphics_col <?php echo (count($release['Graphic']) > 1) ? 'graphics_col_double' : 'graphics_col_single'; ?>">
 					<p class="date">
