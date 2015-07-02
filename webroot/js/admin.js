@@ -333,6 +333,7 @@ var releaseForm = {
 			swf: '/uploadify/uploadify.swf',
 			uploader: '/releases/upload_reports',
 			fileTypeExts: params.valid_extensions,
+			fileSizeLimit: params.fileSizeLimit,
 			formData: {
 				timestamp: params.time,
 				token: params.token,

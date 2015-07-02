@@ -15,6 +15,12 @@
 	$this->Html->script('admin', array('inline' => false));
 	$this->Js->buffer("releaseForm.init();");
 
+    // Determine file upload limit
+    $max_upload = (int)(ini_get('upload_max_filesize'));
+    $max_post = (int)(ini_get('post_max_size'));
+    $memory_limit = (int)(ini_get('memory_limit'));
+    $upload_mb = min($max_upload, $max_post, $memory_limit);
+
 	// Load uploadify library
 	$this->Html->script('/uploadify/jquery.uploadify.min.js', array('inline' => false));
 	$this->Html->css('uploadify.css', null, array('inline' => false));
@@ -22,7 +28,8 @@
 		releaseForm.setupUploadify({
 			valid_extensions: '".implode('; ', $valid_extensions)."',
 			time: ".time().",
-			token: '".md5(Configure::read('upload_token').time())."'
+			token: '".md5(Configure::read('upload_token').time())."',
+			fileSizeLimit: '{$upload_mb}MB'
 		});
 	");
 
@@ -129,12 +136,6 @@
 			<img src="/data_center/img/icons/information.png" alt="More info" />
 		</a>
 	</legend>
-	<?php
-		$max_upload = (int)(ini_get('upload_max_filesize'));
-		$max_post = (int)(ini_get('post_max_size'));
-		$memory_limit = (int)(ini_get('memory_limit'));
-		$upload_mb = min($max_upload, $max_post, $memory_limit);
-	?>
 	<ul class="footnote" style="display: none;" id="footnote_upload_reports">
 		<li>Click on <strong>Select Files</strong> above to upload one or more documents.</li>
 		<li>Files must have one of the following extensions: <?php echo $this->Text->toList($report_filetypes, 'or'); ?>.</li>
