@@ -339,7 +339,7 @@ class ReleasesController extends AppController {
 	    $this->layout = 'DataCenter.blank';
         $this->render('DataCenter.Common/blank');
 
-	    if (empty($_POST) || empty($_FILE)) {
+	    if (empty($_POST) || empty($_FILES)) {
 	        echo 'Error: File was not successfully uploaded.';
             return;
         }
