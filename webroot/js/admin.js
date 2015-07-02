@@ -351,7 +351,6 @@ var releaseForm = {
 					var classname = 'error';
 				}
 				insertFlashMessage(data, classname);
-				console.log('Upload result: '+data);
 			},
 			onUploadError: function(file, errorCode, errorMsg, errorString) {
 				console.log('Upload error...');
