@@ -340,7 +340,7 @@ class ReleasesController extends AppController {
         $this->render('DataCenter.Common/blank');
 
 	    if (empty($_POST) || empty($_FILES)) {
-	        echo 'Error: File was not successfully uploaded.';
+	        echo 'Error: File was not successfully uploaded. This may be because the file exceeded a size limit.';
             return;
         }
 
