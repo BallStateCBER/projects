@@ -336,6 +336,14 @@ class ReleasesController extends AppController {
 	}
 
 	public function upload_reports() {
+	    $this->layout = 'DataCenter.blank';
+        $this->render('DataCenter.Common/blank');
+
+	    if (empty($_POST) || empty($_FILE)) {
+	        echo 'Error: File was not successfully uploaded.';
+            return;
+        }
+
 		$targetFolder = 'reports'; // Relative to the root
 
 		$verifyToken = md5(Configure::read('upload_token') . $_POST['timestamp']);
@@ -363,8 +371,6 @@ class ReleasesController extends AppController {
 				echo "Error: {$_FILES['Filedata']['name']} does not have one of these allowed extensions: ".implode(', ', $fileTypes);
 			}
 		}
-		$this->layout = 'DataCenter.blank';
-		$this->render('DataCenter.Common/blank');
 	}
 
 	/* $row_i is the iterator that identifies which row of the 'add/edit linked graphics'
