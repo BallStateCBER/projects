@@ -430,9 +430,9 @@ class ReleasesController extends AppController {
 
 	public function search() {
 		$this->Prg->commonProcess();
-		$query = $this->passedArgs['q'];
+		$query = isset($this->passedArgs['q']) ? trim($this->passedArgs['q']) : false;
 
-		if ($query) {
+		if (! empty($query)) {
 
 			// Get releases with the query in their titles or descriptions
 			$this->paginate['conditions'] = $this->Release->parseCriteria($this->passedArgs);
