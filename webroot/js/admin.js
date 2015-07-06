@@ -340,9 +340,9 @@ var releaseForm = {
 				overwrite: false
 			},
 			onUploadStart: function(file) {
-				if ($('#overwrite_reports').is(':checked')) {
-					$('#upload_reports').uploadify('settings', 'formData', {overwrite: true});
-				}
+				$('#upload_reports').uploadify('settings', 'formData', {
+					overwrite: $('#overwrite_reports').is(':checked')
+				});
 			},
 			onUploadSuccess: function(file, data, response) {
 				if (data.indexOf('Error') == -1) {
