@@ -51,9 +51,7 @@ class AppController extends Controller {
 			'username' => 'email',
 			'expires' => '+1 year'
 		),
-
         'Auth' => array(
-
             'loginRedirect' => array(
             	'controller' => 'releases',
             	'action' => 'index'
@@ -68,9 +66,7 @@ class AppController extends Controller {
 	                'fields' => array('username' => 'email')
 	            )
 	        )
-
         )
-
 	);
 
 	public function beforeFilter() {
