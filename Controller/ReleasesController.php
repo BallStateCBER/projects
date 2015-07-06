@@ -345,8 +345,8 @@ class ReleasesController extends AppController {
         }
 
 		$targetFolder = 'reports'; // Relative to the root
-
 		$verifyToken = md5(Configure::read('upload_token') . $_POST['timestamp']);
+        $overwrite = isset($_POST['overwrite']) && $_POST['overwrite'] !== false && $_POST['overwrite'] !== 'false';
 
 		if (!empty($_FILES) && $_POST['token'] == $verifyToken) {
 			$tempFile = $_FILES['Filedata']['tmp_name'];
@@ -358,7 +358,7 @@ class ReleasesController extends AppController {
 			$fileParts = pathinfo($_FILES['Filedata']['name']);
 
 			if (in_array(strtolower($fileParts['extension']), $fileTypes)) {
-				if (file_exists($targetFile) && ! (isset($_POST['overwrite']) && $_POST['overwrite'])) {
+				if (file_exists($targetFile) && ! $overwrite) {
 					echo "Error: {$_FILES['Filedata']['name']} has already been uploaded.";
 				} else {
 					if (move_uploaded_file($tempFile,$targetFile)) {
