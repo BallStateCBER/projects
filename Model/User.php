@@ -43,7 +43,7 @@ class User extends AppModel {
 		),
 		'new_password' => array(
 			'nonempty' => array(
-				'rule' => 'notEmpty',
+				'rule' => 'notBlank',
 				'message' => 'Please enter a password.'
 			)
 		),
