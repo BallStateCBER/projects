@@ -13,7 +13,7 @@ class User extends AppModel {
 	public $validate = array(
 		'name' => array(
 			'notempty' => array(
-				'rule' => array('notempty'),
+				'rule' => array('notBlank'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -33,7 +33,7 @@ class User extends AppModel {
 		),
 		'password' => array(
 			'notempty' => array(
-				'rule' => array('notempty'),
+				'rule' => array('notBlank'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -54,14 +54,14 @@ class User extends AppModel {
 			)
 		)
 	);
-	
+
 	public function beforeSave($options = array()) {
 		if (isset($this->data[$this->alias]['password'])) {
 			$this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
 		}
 		return true;
 	}
-	
+
 	public function _identicalFieldValues($field = array(), $compare_field = null) {
 		foreach ($field as $key => $value) {
 			if ($value !== $this->data[$this->name][$compare_field]) {

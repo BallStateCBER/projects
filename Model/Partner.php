@@ -10,7 +10,7 @@ class Partner extends AppModel {
 		'label' => 'name',
 		'slug' => 'slug',
 		'separator' => '-',
-		'overwrite' => false   
+		'overwrite' => false
 	));
 /**
  * Validation rules
@@ -20,7 +20,7 @@ class Partner extends AppModel {
 	public $validate = array(
 		'name' => array(
 			'notempty' => array(
-				'rule' => array('notempty'),
+				'rule' => array('notBlank'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,

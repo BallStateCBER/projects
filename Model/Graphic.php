@@ -10,7 +10,7 @@ class Graphic extends AppModel {
 		'Upload.Upload' => array(
 			'image' => array(
 				'path' => '{ROOT}webroot{DS}img{DS}releases{DS}',
-				
+
 				// These must also be included in checkExtensions() in /js/admin.js
 				'extensions' => array('jpg', 'jpeg', 'gif', 'png'),
 				'fields' => array('dir' => 'dir'),
@@ -41,14 +41,14 @@ class Graphic extends AppModel {
 		),
 		'url' => array(
 			'notempty' => array(
-				'rule' => array('notempty'),
+				'rule' => array('notBlank'),
 				'message' => 'A URL for this linked graphic is required',
 				'required' => true
 			)
 		),
 		'title' => array(
 			'notempty' => array(
-				'rule' => array('notempty'),
+				'rule' => array('notBlank'),
 				'message' => 'Required',
 				'required' => true
 			)
@@ -67,17 +67,17 @@ class Graphic extends AppModel {
 			)
 		)
 	);
-	
+
 	private $__folderToDelete = null;
-	
+
 	public function uploadedImage($check) {
 		return ! empty($check['image']['name']);
 	}
-	
+
 	public function beforeDelete($cascade = true) {
 		$this->__folderToDelete = $this->field('dir');
 	}
-	
+
 	public function getThumbnailFilename($full_filename) {
 		$filename_split = explode('.', $full_filename);
 		$thumbnail_filename = array_slice($filename_split, 0, count($filename_split) - 1);
@@ -85,18 +85,18 @@ class Graphic extends AppModel {
 		$thumbnail_filename[] = end($filename_split);
 		return implode('.', $thumbnail_filename);
 	}
-	
+
 	public function afterFind($results, $primary = false) {
 		foreach ($results as &$result) {
 			if (isset($result['Graphic']['image'])) {
 				// Construct the thumbnail filename by inserting '.thumb' before the extension
 				// e.g. origfilename.jpg => origfilename.thumb.jpg
-				$result['Graphic']['thumbnail'] = $this->getThumbnailFilename($result['Graphic']['image']);	
+				$result['Graphic']['thumbnail'] = $this->getThumbnailFilename($result['Graphic']['image']);
 			}
 		}
 		return $results;
 	}
-	
+
 	public function sanitizeFileName($file_name){
 		$file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
 		$file_name = Inflector::slug(pathinfo($file_name, PATHINFO_FILENAME));

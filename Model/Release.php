@@ -47,7 +47,7 @@ class Release extends AppModel {
 	public $validate = array(
 		'title' => array(
 			'notempty' => array(
-				'rule' => array('notempty'),
+				'rule' => array('notBlank'),
 				'message' => 'Required',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -67,7 +67,7 @@ class Release extends AppModel {
 		),
 		'partner_id' => array(
 			'notempty' => array(
-				'rule' => array('notempty'),
+				'rule' => array('notBlank'),
 				'message' => 'Please choose or add a client / partner / sponsor for this release.',
 				//'allowEmpty' => false,
 				//'required' => false,
