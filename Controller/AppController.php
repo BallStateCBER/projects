@@ -67,14 +67,10 @@ class AppController extends Controller {
 	                'fields' => array('username' => 'email')
 	            )
 	        )
-        ),
-        'Security'
+        )
 	);
 
 	public function beforeFilter() {
-        $this->Security->blackHoleCallback = 'forceSSL';
-        $this->Security->requireSecure();
-
 		$this->AutoLogin->settings = array(
 			// Model settings
 			'model' => 'User',
@@ -183,15 +179,5 @@ class AppController extends Controller {
 
 	public function isAuthorized($user = null) {
 		return (bool)$this->Auth->user('id');
-    }
-
-    /**
-     * Redirects the current request to HTTPS
-     *
-     * @return mixed
-     */
-    public function forceSSL()
-    {
-        return $this->redirect('https://' . env('SERVER_NAME') . $this->here);
     }
 }
