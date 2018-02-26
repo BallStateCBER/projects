@@ -105,7 +105,7 @@ class Tag extends AppModel {
 			'unique' => 'keepExisting',
 			'conditions' => '',
 			'fields' => '',
-			'order' => '',
+			'order' => 'Release.released DESC',
 			'limit' => '',
 			'offset' => '',
 			'finderQuery' => '',
