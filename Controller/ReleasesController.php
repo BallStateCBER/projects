@@ -16,7 +16,7 @@ class ReleasesController extends AppController {
 		'contain' => array('Tag', 'Partner', 'Graphic')
     );
     public $components = array('Search.Prg');
-    public $report_filetypes = array('pdf', 'doc', 'docx', 'xls', 'xlsx');
+    public $report_filetypes = array('pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv');
 	public $presetVars = true; // Used by the Search plugin
 
 	public function beforeFilter() {
