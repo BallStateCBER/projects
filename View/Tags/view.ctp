@@ -1,5 +1,7 @@
 <h1 class="page_title">
-	<?php echo ucwords($tag['Tag']['name']); ?>
+	<?php
+        echo str_replace(' And ', ' and ', ucwords($tag['Tag']['name']));
+    ?>
 </h1>
 
 <?php if (empty($tag['Release'])): ?>

@@ -26,12 +26,16 @@
 <ul class="tags unstyled">
 	<?php foreach ($sidebar_vars['tags'] as $tag): ?>
 		<li>
-			<?php echo $this->Html->link(ucwords($tag['name']), array(
-				'controller' => 'tags',
-				'action' => 'view',
-				'id' => $tag['id'],
-				'slug' => $tag['slug']
-			)); ?>
+			<?php
+                $tag_name = ucwords($tag['name']);
+                $tag_name = str_replace(' And ', ' and ', $tag_name);
+                echo $this->Html->link($tag_name, array(
+                    'controller' => 'tags',
+                    'action' => 'view',
+                    'id' => $tag['id'],
+                    'slug' => $tag['slug']
+                ));
+            ?>
 		</li>
 	<?php endforeach; ?>
 </ul>
