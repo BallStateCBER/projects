@@ -64,7 +64,7 @@
 		'type' => 'date',
 		'dateFormat' => 'MDY',
 		'label' => 'Date Published',
-		'minYear' => 2001,
+		'minYear' => 1984,
 		'maxYear' => date('Y')
 	));
 ?>
