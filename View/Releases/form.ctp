@@ -22,17 +22,16 @@
     $upload_mb = min($max_upload, $max_post, $memory_limit);
 
 	// Load uploadify library
-	$this->Html->script('/uploadify/jquery.uploadify.min.js', array('inline' => false));
-	$this->Html->css('uploadify.css', null, array('inline' => false));
+	$this->Html->script('/uploadifive/jquery.uploadifive.min.js', array('inline' => false));
+	$this->Html->css('/uploadifive/uploadifive.css', null, array('inline' => false));
 	$this->Js->buffer("
 		releaseForm.setupUploadify({
-			valid_extensions: '".implode('; ', $valid_extensions)."',
+			valid_extensions: '".implode('|', $valid_extensions)."',
 			time: ".time().",
 			token: '".md5(Configure::read('upload_token').time())."',
 			fileSizeLimit: '{$upload_mb}MB'
 		});
 	");
-
 
 	/* $i is the next key to be applied to a new input row.
 	 * It begins at zero (or the highest key of data['Graphic'] + 1)

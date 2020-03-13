@@ -329,22 +329,21 @@ var releaseForm = {
 		li.slideDown();
 	},
 	setupUploadify: function (params) {
-		$('#upload_reports').uploadify({
-			swf: '/uploadify/uploadify.swf',
-			uploader: '/releases/upload_reports',
-			fileTypeExts: params.valid_extensions,
+		$('#upload_reports').uploadifive({
+			uploadScript: '/releases/upload_reports',
 			fileSizeLimit: params.fileSizeLimit,
+			fileTypeExts: params.valid_extensions,
 			formData: {
 				timestamp: params.time,
 				token: params.token,
 				overwrite: false
 			},
-			onUploadStart: function(file) {
+			onUploadFile: function(file) {
 				$('#upload_reports').uploadify('settings', 'formData', {
 					overwrite: $('#overwrite_reports').is(':checked')
 				});
 			},
-			onUploadSuccess: function(file, data, response) {
+			onUploadComplete: function(file, data, response) {
 				if (data.indexOf('Error') == -1) {
 					var classname = 'success';
 				} else {
@@ -352,7 +351,8 @@ var releaseForm = {
 				}
 				insertFlashMessage(data, classname);
 			},
-			onUploadError: function(file, errorCode, errorMsg, errorString) {
+			onError: function(file, errorCode, errorMsg, errorString) {
+				alert('There was an error uploading that file. Details are available in the browser console.');
 				console.log('Upload error...');
 				console.log('file: '+file);
 				console.log('errorCode: '+errorCode);
